@@ -3,7 +3,8 @@
         {
             "name": "BuildMachine",
             "includePath": [
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include",
+                "${workspaceFolder}/include/thirdparty",
             ],
             "defines": [],
             "macFrameworkPath": [
