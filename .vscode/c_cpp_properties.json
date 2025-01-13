@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "BuildMachine",
+            "includePath": [
+                "${workspaceFolder}/include"
+            ],
+            "defines": [],
+            "macFrameworkPath": [
+                "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++11",
+        }
+    ],
+    "version": 4
+}

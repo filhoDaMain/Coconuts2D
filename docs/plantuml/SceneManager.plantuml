@@ -1,0 +1,12 @@
+@startuml SceneManager
+
+class SceneManager
+{
+    {method} AddScene(const Scene&)
+    {method} RemoveScene(id)
+    {method} SetActiveScene(id)
+    {method} const Scene& GetActiveScene()
+    {field} m_ActiveScene
+}
+
+@enduml

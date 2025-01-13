@@ -1,0 +1,16 @@
+@startuml Application
+
+start
+
+:Initializations;
+
+repeat
+  : scene = SceneManager()::GetActiveScene();
+  : scene.Init();
+  : scene.Run();
+  : scene.End;
+repeat while (m_IsRunning ?) is (yes) not (no)
+
+  : End;
+
+@enduml

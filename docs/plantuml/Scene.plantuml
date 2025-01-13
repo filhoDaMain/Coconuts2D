@@ -1,0 +1,14 @@
+@startuml Scene
+
+class Scene
+{
+    {method} Init()
+    {method} Run()
+    {method} End()
+    {field} m_ID
+    {field} m_IsActive
+    {field} m_IsRunning
+    {field} m_Name
+}
+
+@enduml
