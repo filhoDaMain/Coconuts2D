@@ -4,7 +4,9 @@ add_library(ccn2d
     Application.cpp
     Scene.cpp
 )
-target_include_directories(ccn2d PUBLIC  "${PROJECT_SOURCE_DIR}/include")
+target_include_directories(ccn2d PUBLIC
+    "${PROJECT_SOURCE_DIR}/include"
+    "${PROJECT_SOURCE_DIR}/include/thirdparty")
 
 
 # Main app

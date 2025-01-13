@@ -15,13 +15,15 @@
  */
 
 #include <coconuts2D/Application.h>
+#include <coconuts2D/Logger.h>
 
 namespace coconuts2D {
 
 Application::Application()
 : m_IsRunning(false)
 {
-    // Initializations
+    LOG_INIT();
+    LOG_DEBUG("Initing application...");
 }
 
 Application::~Application()
@@ -31,6 +33,9 @@ Application::~Application()
 
 void Application::Run(void)
 {
+    LOG_DEBUG("App is running");
+
+    #if 0
     m_IsRunning.store(true);
 
     while (m_IsRunning.load())
@@ -38,6 +43,7 @@ void Application::Run(void)
         // Get Active Scene
         // Run Scene
     }
+    #endif
 }
 
 }
