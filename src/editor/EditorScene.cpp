@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/Application.h>
+#include <coconuts2D/editor/EditorScene.h>
+#include <coconuts2D/Logger.h>
 
-int main(void)
+namespace coconuts2D {
+
+void EditorScene::Run(void)
 {
-    coconuts2D::Application app;
-    app.Play();
-    return 0;
+    LOG_TRACE("Run Scene {}: {}", m_ID, m_Name);
+}
+
 }

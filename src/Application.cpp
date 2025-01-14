@@ -16,11 +16,12 @@
 
 #include <coconuts2D/Application.h>
 #include <coconuts2D/Logger.h>
+#include <coconuts2D/SceneManager.h>
 
 namespace coconuts2D {
 
 Application::Application()
-: m_IsRunning(false)
+: m_IsPlaying(false)
 {
     LOG_INIT();
     LOG_DEBUG("Initing application...");
@@ -31,19 +32,34 @@ Application::~Application()
 
 }
 
-void Application::Run(void)
+void Application::Play(void)
 {
-    LOG_DEBUG("App is running");
+    auto& sm = SceneManager::GetInstance();
 
-    #if 0
-    m_IsRunning.store(true);
-
-    while (m_IsRunning.load())
+    m_IsPlaying.store(true);
+    while (m_IsPlaying.load())
     {
-        // Get Active Scene
-        // Run Scene
+        try
+        {
+            auto scenePtr = sm.GetActiveScene();
+            scenePtr->Run();
+        }
+        catch(const std::exception& e)
+        {
+            LOG_CRITICAL("No active scene! Exiting...");
+            exit(1);
+        }
     }
-    #endif
+}
+
+void Application::Pause(void)
+{
+
+}
+
+void Application::Stop(void)
+{
+
 }
 
 }

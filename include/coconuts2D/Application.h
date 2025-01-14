@@ -27,10 +27,12 @@ public:
     Application();
     ~Application();
 
-    void Run(void);
+    void Play(void);
+    void Pause(void);
+    void Stop(void);
 
 private:
-    std::atomic<bool> m_IsRunning;
+    std::atomic<bool> m_IsPlaying;
 };
 
 }

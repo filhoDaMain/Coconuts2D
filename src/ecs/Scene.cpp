@@ -14,25 +14,14 @@
  * limitations under the License.
  */
 
-#include <cstdint>
-#include <string>
+#include <coconuts2D/ecs/Scene.h>
+#include <coconuts2D/Logger.h>
 
 namespace coconuts2D {
 
-class Scene
+void Scene::Run(void)
 {
-public:
-    Scene();
-    ~Scene();
-
-    void Init(void);
-    void Run(void);
-    void End(void);
-
-private:
-    uint16_t m_ID;
-    std::string m_Name;
-    bool m_Isrunning;
-};
+    LOG_TRACE("Run Scene {}: {}", m_ID, m_Name);
+}
 
 }

@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/Application.h>
+#ifndef COCONUTS2D_EDITORSCENE_H
+#define COCONUTS2D_EDITORSCENE_H
 
-int main(void)
+#include <coconuts2D/ecs/Scene.h>
+
+namespace coconuts2D {
+
+class EditorScene : public Scene
 {
-    coconuts2D::Application app;
-    app.Play();
-    return 0;
+public:
+    using Scene::Scene;
+    void Run(void) override;
+};
+
 }
+
+#endif  // COCONUTS2D_EDITORSCENE_H
