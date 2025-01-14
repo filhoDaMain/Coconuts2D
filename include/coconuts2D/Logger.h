@@ -17,6 +17,8 @@
 #ifndef COCONUTS2D_LOGGER_H
 #define COCONUTS2D_LOGGER_H
 
+#include <ctime>
+
 // Set Logger level based on build type
 #ifdef COCONUTS2D_BUILDTYPE_DEBUG
     #define SPDLOG_ACTIVE_LEVEL 0
@@ -29,7 +31,10 @@ namespace coconuts2D {
 
 #define LOG_INIT() {\
     spdlog::set_level(spdlog::level::trace);\
-    spdlog::set_pattern("%^[%d-%m-%Y %H:%M:%S.%e] [%L] [%@]  %v%$");\
+    spdlog::set_pattern("%^[+ %3ims] [%L] [%@]: %v%$");\
+    time_t timestamp;\
+    time(&timestamp);\
+    SPDLOG_INFO("Init Time: {}", ctime(&timestamp));\
 }
 
 #define LOG_TRACE(...)      SPDLOG_TRACE(__VA_ARGS__)
