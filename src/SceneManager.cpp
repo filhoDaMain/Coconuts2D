@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/Scene.h>
+#include <coconuts2D/SceneManager.h>
+#include <coconuts2D/ecs/Scene.h>
 
 namespace coconuts2D {
 
-Scene::Scene()
+SceneManager::SceneManager()
+: m_ScenesList(), m_ActiveSceneID(0)
+{
+}
+
+SceneManager::~SceneManager()
 {
 
 }
 
-Scene::~Scene()
+uint16_t SceneManager::NewScene(const std::string& name)
 {
+    uint16_t tmpID = m_ScenesList.size();
+    Scene scene(tmpID, name);
+    m_ScenesList.push_back(scene);
 
+    return tmpID;
 }
 
-void Scene::Init(void)
+void SceneManager::RemoveScene(uint16_t id)
 {
-
+    m_ScenesList.erase( m_ScenesList.begin() + id );
 }
 
-void Scene::Run(void)
+const Scene& SceneManager::GetActiveScene(void)
 {
-
+    return m_ScenesList.at(m_ActiveSceneID);
 }
 
-void Scene::End(void)
+void SceneManager::SetActiveScene(uint16_t id)
 {
-
+    m_ActiveSceneID = id;
 }
 
 }

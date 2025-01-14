@@ -19,6 +19,6 @@
 int main(void)
 {
     coconuts2D::Application app;
-    app.Run();
+    app.Play();
     return 0;
 }

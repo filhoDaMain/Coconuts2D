@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef COCONUTS2D_SCENE_H
+#define COCONUTS2D_SCENE_H
+
 #include <cstdint>
 #include <string>
 
@@ -22,17 +25,21 @@ namespace coconuts2D {
 class Scene
 {
 public:
-    Scene();
-    ~Scene();
+    Scene(uint16_t id, const std::string& name)
+    : m_ID(id), m_Name(name), m_IsActive(false)
+    {
 
-    void Init(void);
+    }
+    ~Scene() = default;
+
     void Run(void);
-    void End(void);
 
 private:
     uint16_t m_ID;
     std::string m_Name;
-    bool m_Isrunning;
+    bool m_IsActive;
 };
 
 }
+
+#endif  // COCONUTS2D_SCENE_H

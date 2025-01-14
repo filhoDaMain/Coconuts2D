@@ -14,43 +14,14 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/Application.h>
+#include <coconuts2D/ecs/Scene.h>
 #include <coconuts2D/Logger.h>
-#include <coconuts2D/SceneManager.h>
 
 namespace coconuts2D {
 
-Application::Application()
-: m_IsPlaying(false)
+void Scene::Run()
 {
-    LOG_INIT();
-    LOG_DEBUG("Initing application...");
-
-    auto& sm = SceneManager::GetInstance();
-    sm.SetActiveScene( sm.NewScene("Game Editor Scene") );
-}
-
-Application::~Application()
-{
-
-}
-
-void Application::Play(void)
-{
-    auto& sm = SceneManager::GetInstance();
-    Scene scene = sm.GetActiveScene();
-
-    scene.Run();
-}
-
-void Application::Pause(void)
-{
-
-}
-
-void Application::Stop(void)
-{
-
+    LOG_TRACE("Running scene {} : {}", m_ID, m_Name);
 }
 
 }
