@@ -39,7 +39,13 @@ public:
     uint16_t NewScene(const std::string& name=std::string("Scene"));
     void RemoveScene(uint16_t id);
     std::shared_ptr<Scene> GetActiveScene(void);
-    void SetActiveScene(uint16_t id);
+
+    /**
+     * Sets next active scene after current finishes running.
+     * If no next active scene is specified, the next from the list
+     * starts running.
+     */
+    void SetNextActiveScene(uint16_t id);
 
 private:
     SceneManager();
@@ -47,6 +53,7 @@ private:
 private:
     std::vector< std::shared_ptr<Scene> > m_ScenesPtrList;
     uint16_t m_ActiveSceneID;
+    bool m_QueueNextScene;
 };
 
 }

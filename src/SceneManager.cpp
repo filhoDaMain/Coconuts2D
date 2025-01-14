@@ -15,6 +15,7 @@
  */
 
 #include <coconuts2D/SceneManager.h>
+#include <cassert>
 
 #ifdef COCONUTS2D_COMPILE_GAME_EDITOR
     #include <coconuts2D/editor/EditorScene.h>
@@ -23,12 +24,17 @@
 namespace coconuts2D {
 
 SceneManager::SceneManager()
-: m_ScenesPtrList(), m_ActiveSceneID(0)
+: m_ScenesPtrList(), m_ActiveSceneID(0), m_QueueNextScene(false)
 {
+    assert(m_ScenesPtrList.empty());
+
     // Create "special" Game Editor scene if needed
 #ifdef COCONUTS2D_COMPILE_GAME_EDITOR
     m_ScenesPtrList.push_back( std::shared_ptr<Scene>(new EditorScene(0, "Game Editor Scene")) );
 #endif
+
+    // Set first scene to run
+    SetNextActiveScene(0);
 }
 
 SceneManager::~SceneManager()
@@ -50,12 +56,21 @@ void SceneManager::RemoveScene(uint16_t id)
 
 std::shared_ptr<Scene> SceneManager::GetActiveScene(void)
 {
-    return m_ScenesPtrList.at(m_ActiveSceneID);
+    // m_ActiveSceneID was already updated.
+    if (m_QueueNextScene)
+    {
+        m_QueueNextScene = false;
+        return m_ScenesPtrList.at(m_ActiveSceneID);
+    }
+
+    // Return next scene from the list
+    return m_ScenesPtrList.at(++m_ActiveSceneID);
 }
 
-void SceneManager::SetActiveScene(uint16_t id)
+void SceneManager::SetNextActiveScene(uint16_t id)
 {
     m_ActiveSceneID = id;
+    m_QueueNextScene = true;
 }
 
 }
