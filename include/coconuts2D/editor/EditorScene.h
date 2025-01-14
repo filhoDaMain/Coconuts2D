@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
+#ifndef COCONUTS2D_EDITORSCENE_H
+#define COCONUTS2D_EDITORSCENE_H
+
 #include <coconuts2D/ecs/Scene.h>
-#include <coconuts2D/Logger.h>
 
 namespace coconuts2D {
 
-void Scene::Run(void)
+class EditorScene : public Scene
 {
-    LOG_TRACE("Run Scene {}: {}", m_ID, m_Name);
-}
+public:
+    using Scene::Scene;
+    void Run(void) override;
+};
 
 }
+
+#endif  // COCONUTS2D_EDITORSCENE_H

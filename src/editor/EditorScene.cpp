@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/ecs/Scene.h>
+#include <coconuts2D/editor/EditorScene.h>
 #include <coconuts2D/Logger.h>
 
 namespace coconuts2D {
 
-void Scene::Run(void)
+void EditorScene::Run(void)
 {
     LOG_TRACE("Run Scene {}: {}", m_ID, m_Name);
 }

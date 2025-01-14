@@ -25,9 +25,6 @@ Application::Application()
 {
     LOG_INIT();
     LOG_DEBUG("Initing application...");
-
-    auto& sm = SceneManager::GetInstance();
-    sm.SetActiveScene( sm.NewScene("Game Editor Scene") );
 }
 
 Application::~Application()
@@ -38,9 +35,21 @@ Application::~Application()
 void Application::Play(void)
 {
     auto& sm = SceneManager::GetInstance();
-    Scene scene = sm.GetActiveScene();
 
-    scene.Run();
+    m_IsPlaying.store(true);
+    while (m_IsPlaying.load())
+    {
+        try
+        {
+            auto scenePtr = sm.GetActiveScene();
+            scenePtr->Run();
+        }
+        catch(const std::exception& e)
+        {
+            LOG_CRITICAL("No active scene! Exiting...");
+            exit(1);
+        }
+    }
 }
 
 void Application::Pause(void)

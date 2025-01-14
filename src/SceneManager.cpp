@@ -15,13 +15,20 @@
  */
 
 #include <coconuts2D/SceneManager.h>
-#include <coconuts2D/ecs/Scene.h>
+
+#ifdef COCONUTS2D_COMPILE_GAME_EDITOR
+    #include <coconuts2D/editor/EditorScene.h>
+#endif
 
 namespace coconuts2D {
 
 SceneManager::SceneManager()
-: m_ScenesList(), m_ActiveSceneID(0)
+: m_ScenesPtrList(), m_ActiveSceneID(0)
 {
+    // Create "special" Game Editor scene if needed
+#ifdef COCONUTS2D_COMPILE_GAME_EDITOR
+    m_ScenesPtrList.push_back( std::shared_ptr<Scene>(new EditorScene(0, "Game Editor Scene")) );
+#endif
 }
 
 SceneManager::~SceneManager()
@@ -31,21 +38,19 @@ SceneManager::~SceneManager()
 
 uint16_t SceneManager::NewScene(const std::string& name)
 {
-    uint16_t tmpID = m_ScenesList.size();
-    Scene scene(tmpID, name);
-    m_ScenesList.push_back(scene);
-
+    uint16_t tmpID = m_ScenesPtrList.size();
+    m_ScenesPtrList.push_back( std::shared_ptr<Scene>(new Scene(tmpID, name)) ); 
     return tmpID;
 }
 
 void SceneManager::RemoveScene(uint16_t id)
 {
-    m_ScenesList.erase( m_ScenesList.begin() + id );
+    m_ScenesPtrList.erase( m_ScenesPtrList.begin() + id );
 }
 
-const Scene& SceneManager::GetActiveScene(void)
+std::shared_ptr<Scene> SceneManager::GetActiveScene(void)
 {
-    return m_ScenesList.at(m_ActiveSceneID);
+    return m_ScenesPtrList.at(m_ActiveSceneID);
 }
 
 void SceneManager::SetActiveScene(uint16_t id)

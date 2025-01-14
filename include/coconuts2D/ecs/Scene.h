@@ -27,14 +27,11 @@ class Scene
 public:
     Scene(uint16_t id, const std::string& name)
     : m_ID(id), m_Name(name), m_IsActive(false)
-    {
-
-    }
+    {}
     ~Scene() = default;
+    virtual void Run(void);
 
-    void Run(void);
-
-private:
+protected:
     uint16_t m_ID;
     std::string m_Name;
     bool m_IsActive;

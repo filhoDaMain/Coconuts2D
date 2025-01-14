@@ -18,6 +18,7 @@
 #define COCONUTS2D_SCENEMANAGER_H
 
 #include <coconuts2D/ecs/Scene.h>
+#include <memory>
 #include <vector>
 
 namespace coconuts2D {
@@ -37,14 +38,14 @@ public:
 
     uint16_t NewScene(const std::string& name=std::string("Scene"));
     void RemoveScene(uint16_t id);
-    const Scene& GetActiveScene(void);
+    std::shared_ptr<Scene> GetActiveScene(void);
     void SetActiveScene(uint16_t id);
 
 private:
     SceneManager();
 
 private:
-    std::vector<Scene> m_ScenesList;
+    std::vector< std::shared_ptr<Scene> > m_ScenesPtrList;
     uint16_t m_ActiveSceneID;
 };
 
