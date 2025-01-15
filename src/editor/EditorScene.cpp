@@ -21,7 +21,9 @@ namespace coconuts2D {
 
 void EditorScene::Run(void)
 {
-    LOG_TRACE("Run Scene {}: {}", m_ID, m_Name);
+    LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
+
+	LOG_TRACE("Scene exited");
 }
 
 }
