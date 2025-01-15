@@ -1,3 +1,6 @@
 [submodule "thirdparty/spdlog"]
 	path = thirdparty/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "thirdparty/sol2"]
+	path = thirdparty/sol2
+	url = git@github.com:ThePhD/sol2.git
