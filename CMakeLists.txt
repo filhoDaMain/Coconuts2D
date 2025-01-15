@@ -8,4 +8,8 @@ if( CMAKE_BUILD_TYPE STREQUAL "DEBUG")
     add_compile_definitions(COCONUTS2D_BUILDTYPE_DEBUG)
 endif()
 
+# Thirdparty
+add_subdirectory(thirdparty/lua)
+
+# Coconuts2D
 add_subdirectory(src)

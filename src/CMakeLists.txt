@@ -28,4 +28,4 @@ add_executable(Coconuts2D
     main.cpp
 )
 
-target_link_libraries(Coconuts2D ccn2d)
+target_link_libraries(Coconuts2D ccn2d lua)
