@@ -19,22 +19,32 @@
 
 #include <cstdint>
 #include <string>
+#include <entt/entt.hpp>
 
 namespace coconuts2D {
+
+// Forward declared
+class Entity;
 
 class Scene
 {
 public:
     Scene(uint16_t id, const std::string& name)
-    : m_ID(id), m_Name(name), m_IsActive(false)
+    : m_ID(id), m_Name(name), m_IsActive(false), m_Registry()
     {}
     ~Scene() = default;
     virtual void Run(void);
+
+    Entity NewEntity(void);
 
 protected:
     uint16_t m_ID;
     std::string m_Name;
     bool m_IsActive;
+
+private:
+    entt::registry m_Registry;
+    friend class Entity;
 };
 
 }
