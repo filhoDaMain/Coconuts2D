@@ -19,7 +19,6 @@
 
 #include <entt/entt.hpp>
 #include <coconuts2D/ecs/Scene.h>
-#include <memory>
 
 namespace coconuts2D {
 
