@@ -16,6 +16,7 @@
 
 #include <coconuts2D/ecs/Scene.h>
 #include <coconuts2D/ecs/Entity.h>
+#include <coconuts2D/ecs/Components.h>
 #include <coconuts2D/Logger.h>
 
 namespace coconuts2D {
@@ -23,6 +24,18 @@ namespace coconuts2D {
 void Scene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
+
+    // Create entity
+    std::string scriptPath("../src/ecs/scripts/example.lua");
+    Entity entity1 = this->NewEntity();
+    entity1.AddComponent< Components::ScriptComponent >(scriptPath);
+
+    m_Registry.view<Components::ScriptComponent>().each([] (auto entity, auto& script)
+    {
+        LOG_TRACE("Dev Script found");
+        script.ExecuteOneShot();
+        //script.Submit();
+    });
 
     LOG_TRACE("Scene exited");
 }
