@@ -4,3 +4,6 @@
 [submodule "thirdparty/sol2"]
 	path = thirdparty/sol2
 	url = git@github.com:ThePhD/sol2.git
+[submodule "thirdparty/entt"]
+	path = thirdparty/entt
+	url = git@github.com:skypjack/entt.git

@@ -5,6 +5,7 @@ set(CCN2D_SOURCES)
 list(APPEND CCN2D_SOURCES
     Application.cpp
     SceneManager.cpp
+    Executor.cpp
     ecs/Scene.cpp
 )
 

@@ -15,14 +15,9 @@
  */
 
 #include <coconuts2D/ecs/Scene.h>
+#include <coconuts2D/ecs/Entity.h>
+#include <coconuts2D/ecs/Components.h>
 #include <coconuts2D/Logger.h>
-
-
-// Test Lua scripting:
-// -------------------------------
-#define SOL_ALL_SAFETIES_ON 1
-#include <sol/sol.hpp>
-// -------------------------------
 
 namespace coconuts2D {
 
@@ -30,15 +25,27 @@ void Scene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
 
-	sol::state lua;
-	lua.open_libraries(sol::lib::base);
+    // Create entity
+    std::string scriptPath("../src/ecs/scripts/example.lua");
+    Entity entity1 = this->NewEntity();
+    entity1.AddComponent< Components::ScriptComponent >(scriptPath);
 
-    // load and execute example file
-    // Execute from build dir:
-    // $ ./src/Coconuts2D
-	lua.script_file("../src/ecs/scripts/example.lua");
+    m_Registry.view<Components::ScriptComponent>().each([] (auto entity, auto& script)
+    {
+        LOG_TRACE("Dev Script found");
+        script.ExecuteOneShot();
+        //script.Submit();
+    });
 
     LOG_TRACE("Scene exited");
+}
+
+Entity Scene::NewEntity(void)
+{
+    return {
+        m_Registry.create(),
+        this
+    };
 }
 
 }
