@@ -27,8 +27,9 @@ set(CCN2D_LIB ${CMAKE_CURRENT_BINARY_DIR}/libccn2d.a)
 add_custom_target(combined
     COMMAND ar -x $<TARGET_FILE:core>
     COMMAND ar -x $<TARGET_FILE:${THIRD_PARTY_TARGETS}>
-    COMMAND ar -qcs ${CCN2D_LIB} *.o
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    COMMAND ar -rcs ${CCN2D_LIB} *.o
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    BYPRODUCTS ${CCN2D_LIB}
     DEPENDS core lua
 )
 
