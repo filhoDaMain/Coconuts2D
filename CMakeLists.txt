@@ -10,6 +10,7 @@ endif()
 
 # Thirdparty
 add_subdirectory(thirdparty/lua)
+add_subdirectory(thirdparty/yaml-cpp)
 
 # Coconuts2D
 add_subdirectory(src)
