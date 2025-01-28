@@ -44,13 +44,13 @@ public:
     }
 
     template <typename C>
-    C& GetComponent()
+    C& GetComponent() const
     {
         return m_Scene->m_Registry.get<C>(m_EntityBackend);
     }
 
     template <typename C>
-    bool HasComponent()
+    bool HasComponent() const
     {
         return m_Scene->m_Registry.all_of<C>(m_EntityBackend);
     }
