@@ -31,26 +31,24 @@ namespace Components
         TagComponent(const std::string& t) : tag(t) {}
     };
 
-    class ScriptComponent
+    struct ScriptComponent
     {
-    public:
-        ScriptComponent(const std::string& script) : m_Script(script) {}
+        std::string script;
+
+        ScriptComponent(const std::string& scriptFile) : script(scriptFile) {}
         ~ScriptComponent() = default;
 
         void ExecuteOneShot(void)
         {
             auto& ex = Executor::GetInstance();
-            ex.ExecuteOneShot(m_Script);
+            ex.ExecuteOneShot(script);
         }
 
         void Submit(void)
         {
             auto& ex = Executor::GetInstance();
-            ex.Submit(m_Script);
+            ex.Submit(script);
         }
-
-    private:
-        std::string m_Script;
     };
 
 }
