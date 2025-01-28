@@ -54,6 +54,12 @@ void SceneManager::RemoveScene(uint16_t id)
     m_ScenesPtrList.erase( m_ScenesPtrList.begin() + id );
 }
 
+std::shared_ptr<Scene> SceneManager::GetScene(uint16_t id)
+{
+    assert(id < m_ScenesPtrList.size());
+    return m_ScenesPtrList.at(id);
+}
+
 std::shared_ptr<Scene> SceneManager::GetActiveScene(void)
 {
     // m_ActiveSceneID was already updated.

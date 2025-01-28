@@ -38,7 +38,10 @@ public:
 
     uint16_t NewScene(const std::string& name=std::string("Scene"));
     void RemoveScene(uint16_t id);
+    std::shared_ptr<Scene> GetScene(uint16_t id);
     std::shared_ptr<Scene> GetActiveScene(void);
+    uint16_t GetActiveSceneId(void) {  return m_ActiveSceneID; }
+    uint16_t GetSceneCounter(void) { return m_ScenesPtrList.size(); }
 
     /**
      * Sets next active scene after current finishes running.
