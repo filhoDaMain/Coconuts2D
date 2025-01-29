@@ -25,6 +25,7 @@ namespace coconuts2D {
 
 // Forward declared
 class Entity;
+class ProjectManager;
 
 class Scene
 {
@@ -37,14 +38,17 @@ public:
 
     Entity NewEntity(void);
 
+    std::string GetName(void) { return m_Name; }
+
 protected:
     uint16_t m_ID;
     std::string m_Name;
     bool m_IsActive;
+    entt::registry m_Registry;
 
 private:
-    entt::registry m_Registry;
     friend class Entity;
+    friend class ProjectManager;
 };
 
 }
