@@ -19,6 +19,9 @@
 
 #include <string>
 #include <yaml-cpp/yaml.h>
+#include <coconuts2D/ecs/Entity.h>
+#include <coconuts2D/ecs/Components.h>
+#include <coconuts2D/ecs/Scene.h>
 
 namespace coconuts2D {
 
@@ -35,13 +38,13 @@ public:
         return instance;
     }
 
-    bool SaveProject(const std::string projectFile);
-    bool LoadProject(const std::string projectFile);
+    bool SaveProject(const std::string& projectFile);
+    bool LoadProject(const std::string& projectFile);
 
 private:
     ProjectManager() = default;
-    void SerializeEntities(YAML::Emitter& out, uint16_t sceneId);
-    void SerializeScenes(YAML::Emitter& out);
+    void SerializeEntity(YAML::Emitter& out, const Entity& entity);
+    void SerializeScene(YAML::Emitter& out, uint16_t id);
 };
 
 }
