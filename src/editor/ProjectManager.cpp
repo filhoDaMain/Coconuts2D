@@ -114,7 +114,7 @@ void ProjectManager::SerializeScene(YAML::Emitter& out, uint16_t id)
             out << YAML::Key << SCENE_NODE::str_name << YAML::Value << scene->GetName();
             out << YAML::Key << SCENE_NODE::bool_isactive << \
                 YAML::LongBool << ( id == sm.GetActiveSceneId() );
-            
+
             // SEQUENCE of "mapped" <Entity>
             out << YAML::Key << SCENE_NODE::vec_entities_node << YAML::BeginSeq;
             for(auto entity: scene->m_Registry.view<entt::entity>()) 
@@ -152,6 +152,96 @@ bool ProjectManager::SaveProject(const std::string& projectFile)
     std::ofstream outfile(projectFile);
     outfile << out.c_str() << std::endl;
     outfile.close();
+
+    return true;
+}
+
+void ProjectManager::DeserializeEntity(YAML::Node& node, uint16_t sceneID)
+{
+    using namespace Parser::ROOT_NODE::SCENEMANAGER_ROOT::SCENE_NODE;
+    LOG_TRACE("    Parsing node: {}", ENTITY_NODE::node);
+
+    // Create empty Entity on Scene, then start adding components to it
+    auto& sm = SceneManager::GetInstance();
+    auto scene = sm.GetScene(sceneID);
+    Entity entity = scene->NewEntity();
+
+    // Query YAML for each possible component
+    using namespace ENTITY_NODE::COMPONENTS;
+    auto component_node = node[OPTIONAL_TAG_COMPONENT_NODE::node];
+    if (component_node)
+    {
+        std::string tag = component_node[OPTIONAL_TAG_COMPONENT_NODE::str_tag].as<std::string>();
+        entity.AddComponent<Components::TagComponent>(tag);
+        LOG_TRACE("      Parsing node: {}", OPTIONAL_TAG_COMPONENT_NODE::node);
+        LOG_TRACE("        tag: {}", tag);
+    }
+
+    component_node = node[OPTIONAL_SCRIPT_COMPONENT_NODE::node];
+    if (component_node)
+    {
+        std::string script = component_node[OPTIONAL_SCRIPT_COMPONENT_NODE::script].as<std::string>();
+        entity.AddComponent<Components::ScriptComponent>(script);
+        LOG_TRACE("      Parsing node: {}", OPTIONAL_SCRIPT_COMPONENT_NODE::node);
+        LOG_TRACE("        script: {}", script);
+    }
+
+    //TODO all components from include/coconuts2D/ecs/Components.h ...
+}
+
+void ProjectManager::DeserializeScene(YAML::Node& node)
+{
+    using namespace Parser::ROOT_NODE::SCENEMANAGER_ROOT;
+    uint16_t id = node[SCENE_NODE::u16_id].as<uint16_t>();
+    std::string name = node[SCENE_NODE::str_name].as<std::string>();
+    bool isactive = node[SCENE_NODE::bool_isactive].as<bool>();
+
+    // Create Scene!
+    LOG_TRACE("  Parsing node: {}", SCENE_NODE::node);
+    LOG_TRACE("    id: {}", id);
+    LOG_TRACE("    name: {}", name);
+    LOG_TRACE("    isactive: {}", isactive);
+    auto& sm = SceneManager::GetInstance();
+
+    // Currently, Scene ID's are attributed by order of creation.
+    // We just perform a simple runtime sanity check.
+    assert(id == sm.NewScene(name));
+
+    // Loop through (parse list) each sub-node of vec_entities_node
+    auto vec_entities_list = node[SCENE_NODE::vec_entities_node];
+    for (auto iterate : vec_entities_list)
+    {
+        auto entity_node = iterate[SCENE_NODE::ENTITY_NODE::node];
+        if (entity_node)
+        {
+            DeserializeEntity(entity_node, id);
+        }
+    }
+}
+
+bool ProjectManager::LoadProject(const std::string& projectFile)
+{
+    LOG_DEBUG("LOADING PROJECT...");
+    LOG_DEBUG("File: {}", projectFile);
+
+    YAML::Node root = YAML::LoadFile(projectFile);
+    auto scenemanager_node = root[Parser::ROOT_NODE::SCENEMANAGER_ROOT::node];
+    if (scenemanager_node)
+    {
+        LOG_TRACE("Parsing node: {}", Parser::ROOT_NODE::SCENEMANAGER_ROOT::node);
+        const auto& scenes_list = scenemanager_node;
+
+        // Loop through (parse list) each sub-node which is a SCENE_NODE
+        using namespace Parser::ROOT_NODE::SCENEMANAGER_ROOT;
+        for (auto iterate : scenes_list)
+        {
+            auto scene_node = iterate[SCENE_NODE::node];
+            if (scene_node)
+            {
+                DeserializeScene(scene_node);
+            }
+        }
+    }
 
     return true;
 }

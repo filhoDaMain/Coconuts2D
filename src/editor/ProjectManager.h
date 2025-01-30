@@ -45,6 +45,8 @@ private:
     ProjectManager() = default;
     void SerializeEntity(YAML::Emitter& out, const Entity& entity);
     void SerializeScene(YAML::Emitter& out, uint16_t id);
+    void DeserializeEntity(YAML::Node& node, uint16_t sceneID);
+    void DeserializeScene(YAML::Node& node);
 };
 
 }
