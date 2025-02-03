@@ -2,7 +2,7 @@
 
 start
 
-:Initializations;
+:Init;
 
 repeat
   : scene = SceneManager()::GetActiveScene();

@@ -1,0 +1,49 @@
+@startuml Application
+
+entity "Game:\nmain()"                             as main
+participant "coconuts2D::\nApplication"     as app
+participant "coconuts2D::\nSceneManager"    as sm
+collections "Scenes"                        as scenes
+participant "coconuts2D::\nScene"           as scene
+
+activate main
+main -> app : << create >>
+activate app
+
+app -> app : Engine\nInitialization
+|||
+main -> app : app.Play()
+note right app : **Game Application Loop**\nExecution of Scene by Scene...
+
+loop until No Scene marked as active
+app -> sm: GetActiveScene()
+sm -> scenes
+sm <- scenes
+app <- sm : Scene *
+|||
+app -> scene : scene -> Run()
+activate scene
+
+note left scene : Render Loop
+loop until Developer' Logic\nhits Deactivate condition
+scene -> scene : Execute\nCore Systems
+scene -> scene : Execute\nDeveloper Scripts
+scene -> scene : Render
+scene -> scene : Evaluate\nDeactivate condition
+end loop
+
+note left scene #93E6A9 : **Queue Next Scene** to be activated.\nThis is usually performed by\nDeveloper's Scripts logic.\n\nIf not specified, next from the list\nis queued.
+sm <- scene : SetNextActiveScene(id)
+note right scene #FFAAAA : Self break\nand deactivate
+app <- scene : << return >>
+deactivate scene
+
+end loop
+|||
+app -> app : Graceful\nShutdown
+main <- app : << return >>
+deactivate app
+main -> main: exit(0)
+deactivate main
+
+@enduml
