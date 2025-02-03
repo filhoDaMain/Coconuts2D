@@ -1,7 +1,7 @@
-export ENV_EXPORT_INCLUDES_DIRPATH="export/usr/local/include/"
+export ENV_COCONUTS2D_EXPORT_INCLUDES_DIRPATH="/Users/temprilho/dev/Coconuts2D/export/usr/local/include/"
 
-export ENV_EXPORT_ENGINE_DIRPATH="export/usr/local/lib/"
-export ENV_EXPORT_ENGINE_OUTNAME="libccn2d.a"
+export ENV_COCONUTS2D_EXPORT_ENGINE_DIRPATH="/Users/temprilho/dev/Coconuts2D/export/usr/local/lib/"
+export ENV_COCONUTS2D_EXPORT_ENGINE_OUTNAME="libccn2d.a"
 
-export ENV_EXPORT_EDITOR_STANDALONE_DIRPATH="export/usr/local/bin/"
-export ENV_EXPORT_EDITOR_STANDALONE_OUTNAME="Coconuts2D"
+export ENV_COCONUTS2D_EXPORT_EDITOR_STANDALONE_DIRPATH="/Users/temprilho/dev/Coconuts2D/export/usr/local/bin/"
+export ENV_COCONUTS2D_EXPORT_EDITOR_STANDALONE_OUTNAME="Coconuts2D"
