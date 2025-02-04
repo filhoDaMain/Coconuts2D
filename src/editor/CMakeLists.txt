@@ -4,6 +4,7 @@ set(CORE_EDITOR_SOURCES)
 list(APPEND CORE_EDITOR_SOURCES
     EditorScene.cpp
     ProjectManager.cpp
+    templates/NewProject.cpp
 )
 add_library(core_editor ${CORE_EDITOR_SOURCES})
 
@@ -38,3 +39,15 @@ target_include_directories(editor INTERFACE
     "${PROJECT_SOURCE_DIR}/include"
     "${PROJECT_SOURCE_DIR}/include/thirdparty"
 )
+
+# Compile time macros
+add_compile_definitions(
+    "COCONUTS2D_NEWPROJECT_TEMPLATE_FILE=\"${PROJECT_SOURCE_DIR}/templates/NewProject/template.txt\"")
+add_compile_definitions(
+    "COCONUTS2D_NEWPROJECT_TEMPLATE_BUILDSH=\"${PROJECT_SOURCE_DIR}/templates/NewProject/build.sh\"")
+add_compile_definitions(
+        "COCONUTS2D_NEWPROJECT_TEMPLATE_CMAKELISTS=\"${PROJECT_SOURCE_DIR}/templates/NewProject/CMakeLists.txt\"")
+add_compile_definitions(
+    "COCONUTS2D_NEWPROJECT_TEMPLATE_ENV=\"${PROJECT_SOURCE_DIR}/templates/NewProject/ENV\"")
+add_compile_definitions(
+        "COCONUTS2D_NEWPROJECT_TEMPLATE_MAIN=\"${PROJECT_SOURCE_DIR}/templates/NewProject/main.cpp\"")
