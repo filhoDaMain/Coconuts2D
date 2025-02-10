@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <string>
 #include <entt/entt.hpp>
+#include <sol/sol.hpp>
 
 namespace coconuts2D {
 
@@ -30,10 +31,8 @@ class ProjectManager;
 class Scene
 {
 public:
-    Scene(uint16_t id, const std::string& name)
-    : m_ID(id), m_Name(name), m_IsActive(false), m_Registry()
-    {}
-    ~Scene() = default;
+    Scene(uint16_t id, const std::string& name);
+    ~Scene();
     virtual void Run(void);
 
     Entity NewEntity(void);
@@ -45,6 +44,7 @@ protected:
     std::string m_Name;
     bool m_IsActive;
     entt::registry m_Registry;
+    sol::state m_Lua;
 
 private:
     friend class Entity;

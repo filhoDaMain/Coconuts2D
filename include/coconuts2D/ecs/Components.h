@@ -18,7 +18,7 @@
 #define COCONUTS2D_COMPONENTS_H
 
 #include <string>
-#include <coconuts2D/Executor.h>
+#include <sol/sol.hpp>
 
 namespace coconuts2D {
 
@@ -33,21 +33,23 @@ namespace Components
 
     struct ScriptComponent
     {
-        std::string script;
+        sol::state_view lua;
+        std::string file;
+        sol::table self;
 
-        ScriptComponent(const std::string& scriptFile) : script(scriptFile) {}
-        ~ScriptComponent() = default;
-
-        void ExecuteOneShot(void)
+        struct
         {
-            auto& ex = Executor::GetInstance();
-            ex.ExecuteOneShot(script);
-        }
+            sol::function init;
+            sol::function update;
+            sol::function destroy;
+        } lua_functions;
 
-        void Submit(void)
+        ScriptComponent(lua_State* L, const std::string& f)
+        : lua(L), file(f)
         {
-            auto& ex = Executor::GetInstance();
-            ex.Submit(script);
+            auto script = lua.load_file(file);
+            assert(script.valid());
+            self = script.call();
         }
     };
 
