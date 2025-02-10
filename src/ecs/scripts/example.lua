@@ -1,8 +1,15 @@
-function SumAndPrint(a, b)
-    res = a + b
-    print(res)
+local this = {}
+
+function this:init()
+    print("init() - id: " .. self.id())
 end
 
-print("Executing Lua code ^.^")
-print("7 + 3 = ?")
-SumAndPrint(7, 3)
+function this:update(time)
+    print("update() - id: " .. self.id() .. " with arg: " .. time)
+end
+
+function this:destroy()
+    print("destroy() - id: " .. self.id())
+end
+
+return this

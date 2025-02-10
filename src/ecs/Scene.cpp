@@ -44,19 +44,22 @@ void Scene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
 
-    #if 0   //Refactor needed
-        // Create entity
-        std::string scriptPath("../src/ecs/scripts/example.lua");
-        Entity entity1 = this->NewEntity();
-        entity1.AddComponent< Components::ScriptComponent >(scriptPath);
+    // Example code (to be removed)
+    // Create Entity and add components
+    Entity entity1 = this->NewEntity();
+    entity1.AddComponent<Components::TagComponent>("Camoes");
+    entity1.AddComponent<Components::ScriptComponent>(
+        m_Lua,
+        "../src/ecs/scripts/example.lua"
+    );
 
-        m_Registry.view<Components::ScriptComponent>().each([] (auto entity, auto& script)
+    // Call update() for each ScriptComponent
+    m_Registry.view<Components::ScriptComponent>().each(
+        [&] (auto entity, auto& script)
         {
-            LOG_TRACE("Dev Script found");
-            script.ExecuteOneShot();
-            //script.Submit();
-        });
-    #endif
+            script.lua_functions.update(script.self, 7);
+        }
+    );
 
     LOG_TRACE("Scene exited");
 }
