@@ -48,7 +48,7 @@ namespace Parser {
 
                 namespace OPTIONAL_SCRIPT_COMPONENT_NODE {
                     constexpr auto node = "ScriptComponent";
-                    constexpr auto script = "script";
+                    constexpr auto file = "file";
                 }
 
             }   // COMPONENTS
@@ -90,8 +90,8 @@ void ProjectManager::SerializeEntity(YAML::Emitter& out, const Entity& entity)
             out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::node << \
             YAML::BeginMap;
             {
-                out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::script << \
-                    entity.GetComponent<Components::ScriptComponent>().script;
+                out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::file << \
+                    entity.GetComponent<Components::ScriptComponent>().file;
             }
             out << YAML::EndMap;    // ScriptComponent MAP
         }
@@ -180,10 +180,10 @@ void ProjectManager::DeserializeEntity(YAML::Node& node, uint16_t sceneID)
     component_node = node[OPTIONAL_SCRIPT_COMPONENT_NODE::node];
     if (component_node)
     {
-        std::string script = component_node[OPTIONAL_SCRIPT_COMPONENT_NODE::script].as<std::string>();
-        entity.AddComponent<Components::ScriptComponent>(script);
+        std::string file = component_node[OPTIONAL_SCRIPT_COMPONENT_NODE::file].as<std::string>();
+        entity.AddComponent<Components::ScriptComponent>(scene->m_Lua, file);
         LOG_TRACE("      Parsing node: {}", OPTIONAL_SCRIPT_COMPONENT_NODE::node);
-        LOG_TRACE("        script: {}", script);
+        LOG_TRACE("        file: {}", file);
     }
 
     //TODO all components from include/coconuts2D/ecs/Components.h ...
