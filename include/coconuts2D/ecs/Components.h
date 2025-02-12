@@ -28,6 +28,8 @@ namespace Components
     struct TagComponent
     {
         std::string tag;
+
+        TagComponent(void) : tag("untagged") {}
         TagComponent(const std::string& t) : tag(t) {}
     };
 
