@@ -32,6 +32,9 @@ Scene::Scene(uint16_t id, const std::string& name)
     // Bind "special" ScriptComponent - Bind script functions and tables
     m_Registry.on_construct<Components::ScriptComponent>().connect<&Bindings::ScriptComponent::Init>();
     m_Registry.on_destroy<Components::ScriptComponent>().connect<&Bindings::ScriptComponent::Release>();
+
+    // Bind Components - Make their properties available in Lua
+    Bindings::TagComponent::BindToLua(m_Lua);
 }
 
 Scene::~Scene()

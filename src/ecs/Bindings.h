@@ -26,6 +26,34 @@ namespace coconuts2D {
 namespace Bindings {
 
 
+namespace TagComponent {
+
+    void BindToLua(lua_State* L)
+    {
+        sol::state_view lua(L);
+
+        lua.new_usertype<Components::TagComponent>(
+            "TagComponent", /* as it appears in Lua */
+
+            /* Reflection */
+            "type_id", &entt::type_hash<Components::TagComponent>::value,
+    
+            /* Bind Constructor   */
+            sol::call_constructor,
+            sol::factories(
+                [](const std::string& t)
+                {
+                    return Components::TagComponent{t};
+                 }
+            ),
+    
+            /* Functions and params available in Lua */
+            "tag", &Components::TagComponent::tag
+         );
+    }
+}   // TagComponent
+
+
 namespace ScriptComponent {
 
     void Init(entt::registry &registry, entt::entity entity)
