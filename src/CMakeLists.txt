@@ -45,18 +45,9 @@ target_include_directories(ccn2d INTERFACE
 )
 
 
-# Main app
+# Compile as a standalone Game Editor Application
 # ---------------------------------------------------------------------------
-set(APP_LINK_AGAINST ccn2d)
-
-# Compile as a standalone Game Editor
 if (COMPILE_GAME_EDITOR)
     add_compile_definitions(COCONUTS2D_COMPILE_GAME_EDITOR)
     add_subdirectory(editor)
-    list(APPEND APP_LINK_AGAINST editor)
 endif()
-
-add_executable(Coconuts2D
-    main.cpp
-)
-target_link_libraries(Coconuts2D ${APP_LINK_AGAINST})

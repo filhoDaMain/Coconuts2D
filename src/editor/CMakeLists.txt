@@ -51,3 +51,13 @@ add_compile_definitions(
     "COCONUTS2D_NEWPROJECT_TEMPLATE_ENV=\"${PROJECT_SOURCE_DIR}/templates/NewProject/ENV\"")
 add_compile_definitions(
         "COCONUTS2D_NEWPROJECT_TEMPLATE_MAIN=\"${PROJECT_SOURCE_DIR}/templates/NewProject/main.cpp\"")
+
+
+# Standalone Game Editor Application
+# ---------------------------------------------------------------------------
+set(APP_LINK_AGAINST ccn2d editor)
+
+add_executable(Coconuts2D
+    main.cpp
+)
+target_link_libraries(Coconuts2D ${APP_LINK_AGAINST})
