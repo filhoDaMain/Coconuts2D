@@ -132,6 +132,120 @@ namespace Meta
 }   // Meta
 
 
+namespace Registry {
+
+    void BindToLua(sol::this_state s)
+    {
+        using namespace entt::literals;
+        sol::state_view lua{s};
+        auto entt_module = lua["entt"].get_or_create<sol::table>();
+
+        entt_module.new_usertype<entt::registry>(
+            "registry",
+            sol::meta_function::construct,
+            sol::factories(
+                []()
+                {
+                    return entt::registry{};
+                }
+            ),
+
+            "size",
+                [](const entt::registry &self)
+                {
+                    return self.storage<entt::entity>()->size();
+                },
+
+            "alive",
+                [](const entt::registry &self)
+                {
+                    return self.storage<entt::entity>()->free_list();
+                },
+
+            "valid", &entt::registry::valid,
+
+            "current", &entt::registry::current,
+
+            "create",
+                [](entt::registry &self)
+                {
+                    return self.create();
+                },
+
+            "destroy",
+                [](entt::registry &self, entt::entity entity)
+                {
+                    return self.destroy(entity);
+                },
+
+            "emplace",
+                [](entt::registry &self, entt::entity entity, const sol::table& comp,
+                   sol::this_state s) -> sol::object
+                {
+                    if (!comp.valid())
+                    {
+                        return sol::lua_nil_t{};
+                    }
+
+                    const auto component = Meta::InvokeMetaFunction(
+                        Meta::GetCompIdType(comp),
+                        "meta_add"_hs,
+                        &self,
+                        entity,
+                        comp,
+                        s
+                    );
+
+                    return component ? component.cast<sol::reference>() : sol::lua_nil_t{} ;
+                },
+            
+            "remove",
+                [](entt::registry &self, entt::entity entity, const sol::table& comp)
+                {
+
+                    const auto component = Meta::InvokeMetaFunction(
+                        Meta::GetCompIdType(comp),
+                        "meta_remove"_hs,
+                        &self,
+                        entity
+                    );
+
+                    return component ? component.cast<std::size_t>() : 0 ;
+                },
+
+            "has",
+                [](entt::registry &self, entt::entity entity, const sol::table& comp)
+                {
+                    const auto component = Meta::InvokeMetaFunction(
+                        Meta::GetCompIdType(comp),
+                        "meta_has"_hs,
+                        &self,
+                        entity
+                    );
+
+                    return component ? component.cast<bool>() : false ;
+                },
+            
+            "get",
+                [](entt::registry &self, entt::entity entity, const sol::table& comp,
+                   sol::this_state s)
+                {
+                    const auto component = Meta::InvokeMetaFunction(
+                        Meta::GetCompIdType(comp),
+                        "meta_get"_hs,
+                        &self,
+                        entity,
+                        s
+                    );
+
+                    return component ? component.cast<sol::reference>() : sol::lua_nil_t{} ;
+                }
+        );
+    }
+
+}   // Registry
+
+
 namespace TagComponent {
 
     void BindToLua(lua_State* L)

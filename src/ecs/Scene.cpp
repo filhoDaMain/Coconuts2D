@@ -29,6 +29,9 @@ Scene::Scene(uint16_t id, const std::string& name)
 {
     m_Lua.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string);
 
+    // Bind entt::registry - Make its functions available in Lua
+    m_Lua.require("registry", sol::c_call<AUTO_ARG(&Bindings::Registry::BindToLua)>, false);
+
     // Bind "special" ScriptComponent - Bind script functions and tables
     m_Registry.on_construct<Components::ScriptComponent>().connect<&Bindings::ScriptComponent::Init>();
     m_Registry.on_destroy<Components::ScriptComponent>().connect<&Bindings::ScriptComponent::Release>();
@@ -59,7 +62,7 @@ void Scene::Run(void)
         "../src/ecs/scripts/example.lua"
     );
 
-    // Call update() for each ScriptComponent
+    // Call update() from each ScriptComponent
     m_Registry.view<Components::ScriptComponent>().each(
         [&] (auto entity, auto& script)
         {
