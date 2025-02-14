@@ -51,6 +51,8 @@ add_compile_definitions(
     "COCONUTS2D_NEWPROJECT_TEMPLATE_ENV=\"${PROJECT_SOURCE_DIR}/templates/NewProject/ENV\"")
 add_compile_definitions(
         "COCONUTS2D_NEWPROJECT_TEMPLATE_MAIN=\"${PROJECT_SOURCE_DIR}/templates/NewProject/main.cpp\"")
+add_compile_definitions(
+        "COCONUTS2D_SCRIPTING_API_DIR=\"${PROJECT_SOURCE_DIR}/scripting\"")
 
 
 # Standalone Game Editor Application
