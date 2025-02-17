@@ -19,6 +19,7 @@
 
 #include <string>
 #include <sol/sol.hpp>
+#include <glm/glm.hpp>
 
 namespace coconuts2D {
 
@@ -31,6 +32,23 @@ namespace Components
 
         TagComponent(void) : tag("untagged") {}
         TagComponent(const std::string& t) : tag(t) {}
+    };
+
+    struct TransformComponent
+    {
+        glm::vec2   position;
+        glm::vec2   scale;
+        float       rotationRadians;
+
+        TransformComponent()
+        : position(glm::vec2(0.0f)), scale(glm::vec2(1.0f)), rotationRadians(0.0f) {}
+
+        TransformComponent(
+            const glm::vec2& _position,
+            const glm::vec2& _scale = glm::vec2(1.0f),
+            float _rotationsRadians = 0.0f
+        )
+        : position(_position), scale(_scale), rotationRadians(_rotationsRadians) {}
     };
 
     struct ScriptComponent
