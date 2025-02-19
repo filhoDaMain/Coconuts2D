@@ -38,9 +38,9 @@ Scene::Scene(uint16_t id, const std::string& name)
 
     // Bind Components - Make their properties available in Lua
     Bindings::TagComponent::BindToLua(m_Lua);
+    Bindings::TransformComponent::BindToLua(m_Lua);
 
-    // Create Meta Components in Entt - Allow them to be add/remove/get/has from Lua
-    Bindings::Meta::RegisterComponent<Components::TagComponent>();
+
 }
 
 Scene::~Scene()
@@ -57,6 +57,7 @@ void Scene::Run(void)
     // Create Entity and add components
     Entity entity1 = this->NewEntity();
     entity1.AddComponent<Components::TagComponent>("Camoes");
+    entity1.AddComponent<Components::TransformComponent>();
     entity1.AddComponent<Components::ScriptComponent>(
         m_Lua,
         "../src/ecs/scripts/example.lua"

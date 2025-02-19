@@ -109,7 +109,7 @@ namespace Meta
     {
         if (!meta)
         {
-            LOG_ERROR("Invalid Meta Type!");
+            LOG_ERROR("Invalid Meta Type! Meta Component registration possibly missing.");
             return entt::meta_any{};
         }
 
@@ -248,9 +248,10 @@ namespace Registry {
 
 namespace TagComponent {
 
-    void BindToLua(lua_State* L)
+    void BindToLua(sol::state& lua)
     {
-        sol::state_view lua(L);
+        // Create Meta Component in Entt
+        Bindings::Meta::RegisterComponent<Components::TagComponent>();
 
         lua.new_usertype<Components::TagComponent>(
             "TagComponent", /* as it appears in Lua */
@@ -264,7 +265,7 @@ namespace TagComponent {
                 [](const std::string& t)
                 {
                     return Components::TagComponent{t};
-                 }
+                }
             ),
 
             /* Functions and params available in Lua */
@@ -272,6 +273,95 @@ namespace TagComponent {
          );
     }
 }   // TagComponent
+
+
+namespace TransformComponent {
+
+    namespace Vec2 {
+
+        void Bind(sol::state& lua)
+        {
+            auto add_overload = sol::overload(
+                [] (const glm::vec2& v1, const glm::vec2& v2) { return v1 + v2; },
+                [] (const glm::vec2& v1, float val) { return v1 + val; },
+                [] (const float val, glm::vec2& v1) { return val + v1; }
+            );
+
+            auto subtract_overload = sol::overload(
+                [] (const glm::vec2& v1, const glm::vec2& v2) { return v1 - v2; },
+                [] (const glm::vec2& v1, float val) { return v1 - val; },
+                [] (const float val, glm::vec2& v1) { return val - v1; }
+            );
+
+            auto multiply_overload = sol::overload(
+                [] (const glm::vec2& v1, const glm::vec2& v2) { return v1 * v2; },
+                [] (const glm::vec2& v1, float val) { return v1 * val; },
+                [] (const float val, glm::vec2& v1) { return val * v1; }
+            );
+
+            auto divide_overload = sol::overload(
+                [] (const glm::vec2& v1, const glm::vec2& v2) { return v1 / v2; },
+                [] (const glm::vec2& v1, float val) { return v1 / val; },
+                [] (const float val, glm::vec2& v1) { return val / v1; }
+            );
+
+            lua.new_usertype<glm::vec2>(
+                "vec2",
+                sol::call_constructor,
+                sol::constructors< glm::vec2(float), glm::vec2(float, float) >(),
+                "x", &glm::vec2::x,
+                "y", &glm::vec2::y,
+
+                sol::meta_function::addition, add_overload,
+                sol::meta_function::subtraction, subtract_overload,
+                sol::meta_function::multiplication, multiply_overload,
+                sol::meta_function::division, divide_overload
+            );
+        }
+
+    }
+
+    void BindToLua(sol::state& lua)
+    {
+        // Create Meta Component in Entt
+        Bindings::Meta::RegisterComponent<Components::TransformComponent>();
+        Vec2::Bind(lua);
+
+        lua.new_usertype<Components::TransformComponent>(
+            "TransformComponent", /* as it appears in Lua */
+
+            /* Mandatory */
+            "type_id", &entt::type_hash<Components::TransformComponent>::value,
+
+            /* Bind Constructor   */
+            sol::call_constructor,
+            sol::factories(
+                [](void)
+                {
+                    return Components::TransformComponent();
+                },
+                [](glm::vec2 position)
+                {
+                    return Components::TransformComponent(position);
+                },
+                [](glm::vec2 position, glm::vec2 scale)
+                {
+                    return Components::TransformComponent(position, scale);
+                },
+                [](glm::vec2 position, glm::vec2 scale, float rotation)
+                {
+                    return Components::TransformComponent(position, scale, rotation);
+                }
+            ),
+
+            /* Functions and params available in Lua */
+            "position", &Components::TransformComponent::position,
+            "scale", &Components::TransformComponent::scale,
+            "radians", &Components::TransformComponent::rotationRadians
+         );
+    }
+
+}   // TransformComponent
 
 
 namespace ScriptComponent {
