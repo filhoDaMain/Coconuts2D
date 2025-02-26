@@ -1,47 +1,46 @@
-local core = require("coconuts2D.core_api")
-local components = core.components
-
-local this = {}
+local entity = require("coconuts2D.entity_api")
+local this = entity
 
 
 function this:init()
-    print("init() - id: " .. self.id())
+    print("Initing Entity # " .. this.id())
 
-    if core.has_component(self, components.TagComponent) then
-        tagComponent = core.get_component(self, components.TagComponent)
-        print("  Hello " .. tagComponent.tag)
-
-        -- Update its tag
-        tagComponent.tag = "Luís Vaz de Camões"
+    if this:has_component(TagComponent) then
+        local tag = this:get_component(TagComponent)
+        print("  Name: " .. tag.tag)
     end
 
-    if core.has_component(self, TransformComponent) then
-        transform = core.get_component(self, TransformComponent)
-        print("  x pos = " .. transform.position.x)
+    if this:has_component(TransformComponent) then
+        local transform = this:get_component(TransformComponent)
+        print("  Pos.x = " .. transform.position.x)
+        print("  Pos.y = " .. transform.position.y)
 
-        -- update position
-        transform.position.x = transform.position.x + 5
+        -- Make an update to check at update() time
+        transform.position.x = 3
+        transform.position.y = 7
     end
 end
 
 
 function this:update(time)
-    print("update() - id: " .. self.id() .. " with arg: " .. time)
+    print("Updating Entity # " .. this.id())
 
-    if core.has_component(self, components.TagComponent) then
-        tagComponent = core.get_component(self, components.TagComponent)
-        print("  Hello " .. tagComponent.tag)
+    if this:has_component(TagComponent) then
+        local tag = this:get_component(TagComponent)
+        print("  Name: " .. tag.tag)
     end
 
-    if core.has_component(self, TransformComponent) then
-        transform = core.get_component(self, TransformComponent)
-        print("  x pos = " .. transform.position.x)
+    if this:has_component(TransformComponent) then
+        local transform = this:get_component(TransformComponent)
+        print("  Pos.x = " .. transform.position.x)
+        print("  Pos.y = " .. transform.position.y)
     end
 end
 
 
 function this:destroy()
-    print("destroy() - id: " .. self.id())
+    print("Destroying Entity # " .. this.id())
 end
+
 
 return this
