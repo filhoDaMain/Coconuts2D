@@ -17,8 +17,10 @@
 #include "ProjectManager.h"
 #include <coconuts2D/Logger.h>
 #include <coconuts2D/SceneManager.h>
+#include "templates/NewProject.h"
 #include <fstream>
 #include <cassert>
+#include <filesystem>
 
 namespace coconuts2D {
 
@@ -90,8 +92,14 @@ void ProjectManager::SerializeEntity(YAML::Emitter& out, const Entity& entity)
             out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::node << \
             YAML::BeginMap;
             {
-                out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::file << \
-                    entity.GetComponent<Components::ScriptComponent>().file;
+                // Make file path relative to project's root directory
+                auto absPath = entity.GetComponent<Components::ScriptComponent>().file;
+                std::string relPath = std::filesystem::relative(
+                    std::filesystem::path(absPath),
+                    std::filesystem::path(m_ProjRootDir)
+                ).string();
+
+                out << YAML::Key << OPTIONAL_SCRIPT_COMPONENT_NODE::file << relPath;
             }
             out << YAML::EndMap;    // ScriptComponent MAP
         }
@@ -129,8 +137,38 @@ void ProjectManager::SerializeScene(YAML::Emitter& out, uint16_t id)
 
 }
 
-bool ProjectManager::SaveProject(const std::string& projectFile)
+bool ProjectManager::NewProject(ProjectTemplate projTemplate, const std::string& location)
 {
+    switch (projTemplate)
+    {
+        case ProjectTemplate::NewProject:
+        {
+            m_ProjRootDir = location;
+            ::coconuts2D::NewProject np{};
+            np.CreateNewProject(location);
+            break;
+        }
+
+        default: LOG_ERROR("Unknown project template for new project"); return false;
+    }
+
+    return true;
+}
+
+bool ProjectManager::SaveProject(void)
+{
+    // No project created or loaded
+    if (m_ProjRootDir.empty())
+    {
+        LOG_ERROR("No project loaded. Create new or load an existing project before saving");
+        return false;
+    }
+
+    // Create file with same name as parent directory
+    // Ex: /path/to/projFile/MyGame/MyGame.yaml
+    std::string projectFile = std::filesystem::path(m_ProjRootDir).filename().string();
+    projectFile = m_ProjRootDir + "/" + projectFile + ".yaml";
+
     YAML::Emitter out;
 
     // Root

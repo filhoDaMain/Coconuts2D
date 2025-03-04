@@ -28,6 +28,12 @@ namespace coconuts2D {
 class ProjectManager
 {
 public:
+
+    enum class ProjectTemplate
+    {
+        NewProject = 0
+    };
+
     ProjectManager(const ProjectManager&) = delete;
     void operator=(const ProjectManager&) = delete;
     ~ProjectManager() = default;
@@ -38,15 +44,19 @@ public:
         return instance;
     }
 
-    bool SaveProject(const std::string& projectFile);
+    bool NewProject(ProjectTemplate projTemplate, const std::string& location);
+    bool SaveProject(void);
     bool LoadProject(const std::string& projectFile);
 
 private:
-    ProjectManager() = default;
+    ProjectManager() : m_ProjRootDir() {};
     void SerializeEntity(YAML::Emitter& out, const Entity& entity);
     void SerializeScene(YAML::Emitter& out, uint16_t id);
     void DeserializeEntity(YAML::Node& node, uint16_t sceneID);
     void DeserializeScene(YAML::Node& node);
+
+private:
+    std::string m_ProjRootDir;
 };
 
 }
