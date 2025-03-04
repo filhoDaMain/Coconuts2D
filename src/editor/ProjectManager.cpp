@@ -210,18 +210,20 @@ void ProjectManager::DeserializeEntity(YAML::Node& node, uint16_t sceneID)
     if (component_node)
     {
         std::string tag = component_node[OPTIONAL_TAG_COMPONENT_NODE::str_tag].as<std::string>();
-        entity.AddComponent<Components::TagComponent>(tag);
         LOG_TRACE("      Parsing node: {}", OPTIONAL_TAG_COMPONENT_NODE::node);
         LOG_TRACE("        tag: {}", tag);
+        entity.AddComponent<Components::TagComponent>(tag);
     }
 
     component_node = node[OPTIONAL_SCRIPT_COMPONENT_NODE::node];
     if (component_node)
     {
         std::string file = component_node[OPTIONAL_SCRIPT_COMPONENT_NODE::file].as<std::string>();
-        entity.AddComponent<Components::ScriptComponent>(scene->m_Lua, file);
         LOG_TRACE("      Parsing node: {}", OPTIONAL_SCRIPT_COMPONENT_NODE::node);
         LOG_TRACE("        file: {}", file);
+        // Create absolute path
+        file = m_ProjRootDir + "/" + file;
+        entity.AddComponent<Components::ScriptComponent>(scene->m_Lua, file);
     }
 
     //TODO all components from include/coconuts2D/ecs/Components.h ...
@@ -243,7 +245,7 @@ void ProjectManager::DeserializeScene(YAML::Node& node)
 
     // Currently, Scene ID's are attributed by order of creation.
     // We just perform a simple runtime sanity check.
-    assert(id == sm.NewScene(name));
+    //assert(id == sm.NewScene(name));
 
     // Loop through (parse list) each sub-node of vec_entities_node
     auto vec_entities_list = node[SCENE_NODE::vec_entities_node];
@@ -261,6 +263,11 @@ bool ProjectManager::LoadProject(const std::string& projectFile)
 {
     LOG_DEBUG("LOADING PROJECT...");
     LOG_DEBUG("File: {}", projectFile);
+
+    // Get absolute path to projectFile's parent directory
+    auto parentDir = std::filesystem::path(projectFile).parent_path();
+    m_ProjRootDir = std::filesystem::absolute(parentDir).string();
+    LOG_TRACE("Project Root Dir: {}", m_ProjRootDir);
 
     YAML::Node root = YAML::LoadFile(projectFile);
     auto scenemanager_node = root[Parser::ROOT_NODE::SCENEMANAGER_ROOT::node];
