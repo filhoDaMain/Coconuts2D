@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-#include <coconuts2D/editor/EditorScene.h>
+#include "EditorScene.h"
 #include <coconuts2D/Logger.h>
+
+// Testing
+#include "ProjectManager.h"
 
 namespace coconuts2D {
 
 void EditorScene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
+
+    auto& pm = ProjectManager::GetInstance();
+    pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+
 
 	LOG_TRACE("Scene exited");
 }

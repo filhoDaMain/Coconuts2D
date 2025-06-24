@@ -18,7 +18,7 @@
 #include <cassert>
 
 #ifdef COCONUTS2D_COMPILE_GAME_EDITOR
-    #include <coconuts2D/editor/EditorScene.h>
+    #include "editor/EditorScene.h"
 #endif
 
 namespace coconuts2D {

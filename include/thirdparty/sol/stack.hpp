@@ -34,6 +34,7 @@
 #include <sol/stack_pop.hpp>
 #include <sol/stack_field.hpp>
 #include <sol/stack_probe.hpp>
+#include <sol/error.hpp>
 #include <sol/assert.hpp>
 
 #include <cstring>
@@ -150,7 +151,10 @@ namespace sol {
 			template <bool checked, typename Arg, typename... Args, std::size_t I, std::size_t... Is, typename Handler, typename Fx, typename... FxArgs>
 			static decltype(auto) eval(types<Arg, Args...>, std::index_sequence<I, Is...>, lua_State* L_, int start_index_, Handler&& handler_,
 			     record& tracking_, Fx&& fx_, FxArgs&&... fxargs_) {
-#if SOL_IS_ON(SOL_PROPAGATE_EXCEPTIONS)
+#if 0 && SOL_IS_ON(SOL_PROPAGATE_EXCEPTIONS)
+				// NOTE: THIS IS TERMPORARILY TURNED OFF BECAUSE IT IMPACTS ACTUAL SEMANTICS W.R.T. THINGS LIKE LUAJIT,
+				// SO IT MUST REMAIN OFF UNTIL WE CAN ESTABLISH SIMILAR BEHAVIOR IN MODES WHERE `checked == false`!
+
 				// We can save performance/time by letting errors unwind produced arguments
 				// rather than checking everything once, and then potentially re-doing work
 				if constexpr (checked) {
@@ -205,7 +209,7 @@ namespace sol {
 			template <typename T>
 			void raw_table_set(lua_State* L, T&& arg, int tableindex = -2) {
 				int push_count = push(L, std::forward<T>(arg));
-				sol_c_assert(push_count == 1);
+				SOL_ASSERT(push_count == 1);
 				std::size_t unique_index = static_cast<std::size_t>(luaL_len(L, tableindex) + 1u);
 				lua_rawseti(L, tableindex, static_cast<int>(unique_index));
 			}
@@ -215,7 +219,7 @@ namespace sol {
 		template <typename T>
 		int set_ref(lua_State* L, T&& arg, int tableindex = -2) {
 			int push_count = push(L, std::forward<T>(arg));
-			sol_c_assert(push_count == 1);
+			SOL_ASSERT(push_count == 1);
 			return luaL_ref(L, tableindex);
 		}
 
@@ -355,6 +359,24 @@ namespace sol {
 #else
 			(void)L;
 #endif
+		}
+
+		namespace stack_detail {
+			inline error get_error(lua_State* L, int target) {
+				auto maybe_exc = stack::check_get<error&>(L, target);
+				if (maybe_exc.has_value()) {
+					return maybe_exc.value();
+				}
+				return error(detail::direct_error, stack::get<std::string>(L, target));
+			}
+
+			inline detail::error_exception get_error_exception(lua_State* L, int target) {
+				auto maybe_exc = stack::check_get<detail::error_exception&>(L, target);
+				if (maybe_exc.has_value()) {
+					return maybe_exc.value();
+				}
+				return detail::error_exception(detail::direct_error, stack::get<std::string>(L, target));
+			}
 		}
 	} // namespace stack
 } // namespace sol

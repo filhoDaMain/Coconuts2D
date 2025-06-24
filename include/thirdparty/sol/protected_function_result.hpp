@@ -101,7 +101,9 @@ namespace sol {
 
 #if SOL_IS_ON(SOL_COMPILER_GCC)
 #pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#if !SOL_IS_ON(SOL_COMPILER_CLANG)
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #endif
 
 		template <typename T>
@@ -114,7 +116,7 @@ namespace sol {
 					if (valid()) {
 						return UT();
 					}
-					return UT(error(detail::direct_error, stack::get<std::string>(L, target)));
+					return UT(stack::stack_detail::get_error(L, target));
 				}
 				else {
 					if (!valid()) {
@@ -131,7 +133,7 @@ namespace sol {
 						type_panic_c_str(L, target, t, type::none, "bad get from protected_function_result (is an error)");
 					}
 #endif // Check Argument Safety
-					return error(detail::direct_error, stack::get<std::string>(L, target));
+					return stack::stack_detail::get_error(L, target);
 				}
 				else {
 #if SOL_IS_ON(SOL_SAFE_PROXIES)

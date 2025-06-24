@@ -11,7 +11,7 @@
 // the Software, and to permit persons to whom the Software is furnished to do so,
 // subject to the following conditions:
 
-// The above copyright notice and this permission notice shall be included in all
+// The above copyright notice and this Spermission notice shall be included in all
 // copies or substantial portions of the Software.
 
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -21,31 +21,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef SOL_COMPATIBILITY_HPP
-#define SOL_COMPATIBILITY_HPP
+#ifndef SOL_TO_STRING_HPP
+#define SOL_TO_STRING_HPP
 
-// The various pieces of the compatibility layer
-// comes from https://github.com/keplerproject/lua-compat-5.3
-// but has been modified in many places for use with sol and luajit,
-// though the core abstractions remain the same
+#include <sol/forward.hpp>
+#include <sol/object.hpp>
 
-#include <sol/version.hpp>
-#include <sol/compatibility/lua_version.hpp>
+#include <cstddef>
+#include <string>
 
-#if SOL_IS_ON(SOL_USE_COMPATIBILITY_LAYER)
+namespace sol::utility {
 
-// clang-format off
-#if SOL_IS_ON(SOL_USING_CXX_LUA) || SOL_IS_ON(SOL_USING_CXX_LUAJIT)
-	#ifndef COMPAT53_LUA_CPP
-		#define COMPAT53_LUA_CPP 1
-	#endif // Build Lua Compat layer as C++
-#endif
-	#ifndef COMPAT53_INCLUDE_SOURCE
-		#define COMPAT53_INCLUDE_SOURCE 1
-	#endif // Build Compat Layer Inline
-	#include <sol/compatibility/compat-5.3.h>
-	#include <sol/compatibility/compat-5.4.h>
-#endif
-// clang-format on
+	// Converts any object into a string using luaL_tolstring.
+	//
+	// Note: Uses the metamethod __tostring if available.
+	inline std::string to_string(const sol::stack_object& object) {
+		std::size_t len;
+		const char* str = luaL_tolstring(object.lua_state(), object.stack_index(), &len);
 
-#endif // SOL_COMPATIBILITY_HPP
+		auto result = std::string(str, len);
+
+		// luaL_tolstring pushes the string onto the stack, but since
+		// we have copied it into our std::string by now we should
+		// remove it from the stack.
+		lua_pop(object.lua_state(), 1);
+
+		return result;
+	}
+
+	inline std::string to_string(const sol::object& object) {
+		auto pp = sol::stack::push_pop(object);
+		return to_string(sol::stack_object(object.lua_state(), -1));
+	}
+
+} // namespace sol::utility
+
+#endif // SOL_IS_INTEGER_HPP
