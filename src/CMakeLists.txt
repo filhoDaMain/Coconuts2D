@@ -4,6 +4,7 @@ set(CORE_SOURCES)
 list(APPEND CORE_SOURCES
     Application.cpp
     SceneManager.cpp
+    FileSystem.cpp
     ecs/Scene.cpp
 )
 add_library(core ${CORE_SOURCES})
