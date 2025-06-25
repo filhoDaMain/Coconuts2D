@@ -18,13 +18,15 @@
 #define COCONUTS2D_APPLICATION_H
 
 #include <atomic>
+#include <string>
 
 namespace coconuts2D {
 
 class Application
 {
 public:
-    Application();
+    Application(const std::string& argv0);
+    Application() = delete;
     ~Application();
 
     void Play(void);

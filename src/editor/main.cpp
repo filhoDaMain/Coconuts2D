@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
- #include <coconuts2D/Application.h>
- #include <string>
- #include <cstdlib>
+#include <coconuts2D/Application.h>
+#include <string>
+#include <cstdlib>
  
- int main(void)
- {
-     // Set LUA_PATH to include Coconuts2D Lua API scripts
-     std::string lua_api_dir(COCONUTS2D_SCRIPTING_API_DIR);
-     std::string env_lua_path = "$LUA_PATH;" + lua_api_dir + "/?.lua";
-     (void) setenv("LUA_PATH", env_lua_path.c_str(), 1);
- 
-     coconuts2D::Application app;
-     app.Play();
-     return 0;
- }
+int main(int argc, char* argv[])
+{
+    // Set LUA_PATH to include Coconuts2D Lua API scripts
+    std::string lua_api_dir(COCONUTS2D_SCRIPTING_API_DIR);
+    std::string env_lua_path = "$LUA_PATH;" + lua_api_dir + "/?.lua";
+    (void) setenv("LUA_PATH", env_lua_path.c_str(), 1);
+
+    coconuts2D::Application app( static_cast<std::string>(argv[0]) );
+    app.Play();
+    return 0;
+}
  

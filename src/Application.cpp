@@ -20,7 +20,7 @@
 
 namespace coconuts2D {
 
-Application::Application()
+Application::Application(const std::string& argv0)
 : m_IsPlaying(false)
 {
     LOG_INIT();
