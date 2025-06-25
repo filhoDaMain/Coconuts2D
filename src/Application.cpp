@@ -17,6 +17,7 @@
 #include <coconuts2D/Application.h>
 #include <coconuts2D/Logger.h>
 #include <coconuts2D/SceneManager.h>
+#include <coconuts2D/FileSystem.h>
 
 namespace coconuts2D {
 
@@ -25,6 +26,11 @@ Application::Application(const std::string& argv0)
 {
     LOG_INIT();
     LOG_DEBUG("Initing application...");
+
+    auto& fs = FileSystem::GetInstance(); fs.Init(argv0);
+    LOG_TRACE("ProcWDir = {}", fs.GetProcWDirPathImpl());
+    LOG_TRACE("RuntimeConfDir = {}", fs.GetRuntimeConfDirPathImpl());
+    LOG_TRACE("ExecDir = {}", fs.GetRuntimeExecDirPathImpl());
 }
 
 Application::~Application()
