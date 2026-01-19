@@ -38,6 +38,7 @@ public:
 
     uint16_t NewScene(const std::string& name=std::string("Scene"));
     void RemoveScene(uint16_t id);
+    uint16_t AddCustomScene(const std::shared_ptr<Scene> scene);
     std::shared_ptr<Scene> GetScene(uint16_t id);
     std::shared_ptr<Scene> GetActiveScene(void);
     uint16_t GetActiveSceneId(void) {  return m_ActiveSceneID; }
