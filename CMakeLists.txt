@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 3.1)
 project(Coconuts2D VERSION 0.1 LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 17)
 
-option(COMPILE_GAME_EDITOR "Build Game Editor application" ON)
 add_compile_definitions("COCONUTS2D_SOURCES_ROOTDIR=\"${PROJECT_SOURCE_DIR}\"")
 
-if( CMAKE_BUILD_TYPE STREQUAL "DEBUG")
+if( CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_definitions(COCONUTS2D_BUILDTYPE_DEBUG)
 endif()
 
