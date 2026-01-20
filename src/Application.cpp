@@ -42,9 +42,6 @@ void Application::Play(void)
 {
     auto& sm = SceneManager::GetInstance();
 
-    // Create a Scene and watch it being executed
-    sm.NewScene("Game Scene");
-
     m_IsPlaying.store(true);
     while (m_IsPlaying.load())
     {
