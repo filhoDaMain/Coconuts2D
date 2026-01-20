@@ -1,6 +1,0 @@
-d: res
-d: src
-f_env: ENV
-f_cmake: CMakeLists.txt
-f_build: build.sh
-f_main: src/main.cpp
