@@ -39,6 +39,8 @@ public:
 
     std::string GetName(void) { return m_Name; }
 
+    const sol::state& GetLua() { return m_Lua; }
+
 protected:
     uint16_t m_ID;
     std::string m_Name;
