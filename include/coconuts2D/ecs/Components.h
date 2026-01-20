@@ -55,6 +55,7 @@ namespace Components
     {
         sol::state_view lua;
         std::string file;
+        std::string script;
         sol::table self;
 
         struct
@@ -70,6 +71,14 @@ namespace Components
             auto script = lua.load_file(file);
             assert(script.valid());
             self = script.call();
+        }
+
+        ScriptComponent(lua_State* L, const char* code)
+        : lua(L), script( std::string(code) )
+        {
+            auto scriptCode = lua.load(script);
+            assert(scriptCode.valid());
+            self = scriptCode.call();
         }
     };
 
