@@ -4,6 +4,7 @@ set(CORE_EDITOR_SOURCES)
 list(APPEND CORE_EDITOR_SOURCES
     EditorScene.cpp
     ProjectManager.cpp
+    NewProject.cpp
 )
 add_library(core_editor ${CORE_EDITOR_SOURCES})
 
