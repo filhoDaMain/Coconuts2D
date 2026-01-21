@@ -10,9 +10,6 @@
 [submodule "thirdparty/yaml-cpp"]
 	path = thirdparty/yaml-cpp
 	url = git@github.com:jbeder/yaml-cpp.git
-[submodule "thirdparty/incbin"]
-	path = thirdparty/incbin
-	url = git@github.com:graphitemaster/incbin.git
 [submodule "thirdparty/glm"]
 	path = thirdparty/glm
 	url = git@github.com:g-truc/glm.git
