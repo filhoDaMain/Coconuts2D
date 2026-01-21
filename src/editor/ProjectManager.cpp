@@ -17,7 +17,7 @@
 #include "ProjectManager.h"
 #include <coconuts2D/Logger.h>
 #include <coconuts2D/SceneManager.h>
-#include "templates/NewProject.h"
+#include "NewProject.h"
 #include <fstream>
 #include <cassert>
 #include <filesystem>
