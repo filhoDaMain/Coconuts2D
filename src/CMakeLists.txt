@@ -48,7 +48,4 @@ target_include_directories(ccn2d INTERFACE
 
 # Compile as a standalone Game Editor Application
 # ---------------------------------------------------------------------------
-if (COMPILE_GAME_EDITOR)
-    add_compile_definitions(COCONUTS2D_COMPILE_GAME_EDITOR)
-    add_subdirectory(editor)
-endif()
+add_subdirectory(editor)
