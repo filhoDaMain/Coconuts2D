@@ -4,7 +4,6 @@ set(CORE_EDITOR_SOURCES)
 list(APPEND CORE_EDITOR_SOURCES
     EditorScene.cpp
     ProjectManager.cpp
-    templates/NewProject.cpp
 )
 add_library(core_editor ${CORE_EDITOR_SOURCES})
 
@@ -40,24 +39,25 @@ target_include_directories(editor INTERFACE
     "${PROJECT_SOURCE_DIR}/include/thirdparty"
 )
 
-# Compile time macros
-add_compile_definitions(
-    "COCONUTS2D_NEWPROJECT_TEMPLATE_FILE=\"${PROJECT_SOURCE_DIR}/templates/NewProject/template.txt\"")
-add_compile_definitions(
-    "COCONUTS2D_NEWPROJECT_TEMPLATE_BUILDSH=\"${PROJECT_SOURCE_DIR}/templates/NewProject/build.sh\"")
-add_compile_definitions(
-        "COCONUTS2D_NEWPROJECT_TEMPLATE_CMAKELISTS=\"${PROJECT_SOURCE_DIR}/templates/NewProject/CMakeLists.txt\"")
-add_compile_definitions(
-    "COCONUTS2D_NEWPROJECT_TEMPLATE_ENV=\"${PROJECT_SOURCE_DIR}/templates/NewProject/ENV\"")
-add_compile_definitions(
-        "COCONUTS2D_NEWPROJECT_TEMPLATE_MAIN=\"${PROJECT_SOURCE_DIR}/templates/NewProject/main.cpp\"")
 add_compile_definitions(
         "COCONUTS2D_SCRIPTING_API_DIR=\"${PROJECT_SOURCE_DIR}/scripting\"")
 
 
 # Standalone Game Editor Application
 # ---------------------------------------------------------------------------
-set(APP_LINK_AGAINST ccn2d editor)
+include(${PROJECT_SOURCE_DIR}/thirdparty/cmrc/CMakeRC.cmake)
+
+# The resources lib as in the Game project, to embed data onto the binary
+cmrc_add_resource_library(resources)
+
+# newproject lib, to embed the NewProject template files onto the Editor binary
+FILE(GLOB_RECURSE NewProject 
+    templates/NewProject/* 
+)
+cmrc_add_resource_library(newproject ${NewProject})
+
+
+set(APP_LINK_AGAINST ccn2d editor resources newproject)
 
 add_executable(Coconuts2D
     main.cpp
