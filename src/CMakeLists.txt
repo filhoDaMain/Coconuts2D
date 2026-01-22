@@ -16,22 +16,27 @@ target_include_directories(core PRIVATE
 )
 
 
+# Scripting Library
+# ---------------------------------------------------------------------------
+include(${PROJECT_SOURCE_DIR}/thirdparty/cmrc/CMakeRC.cmake)
+FILE(GLOB_RECURSE Scripting
+    Scripting/*
+)
+cmrc_add_resource_library(scripting ${Scripting})
+
+
 # Combined ccn2d Library
 # ---------------------------------------------------------------------------
-# Full list of third party targets to link against
-set(THIRD_PARTY_TARGETS
-    lua
-)
-
 # Combined library output
 set(CCN2D_LIB ${CMAKE_CURRENT_BINARY_DIR}/libccn2d.a)
 add_custom_target(combined
     COMMAND ar -x $<TARGET_FILE:core>
-    COMMAND ar -x $<TARGET_FILE:${THIRD_PARTY_TARGETS}>
+    COMMAND ar -x $<TARGET_FILE:lua>
+    COMMAND ar -x $<TARGET_FILE:scripting>
     COMMAND ar -rcs ${CCN2D_LIB} *.o
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     BYPRODUCTS ${CCN2D_LIB}
-    DEPENDS core lua
+    DEPENDS core lua scripting
 )
 
 # Combined library target
