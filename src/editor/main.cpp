@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+#include "EditorScene.h"
 #include <coconuts2D/Application.h>
+#include <coconuts2D/SceneManager.h>
+#include <coconuts2D/ResourceManager.h>
 #include <string>
 #include <cstdlib>
+#include <memory>
+
  
 int main(int argc, char* argv[])
 {
@@ -25,7 +30,18 @@ int main(int argc, char* argv[])
     std::string env_lua_path = "$LUA_PATH;" + lua_api_dir + "/?.lua";
     (void) setenv("LUA_PATH", env_lua_path.c_str(), 1);
 
-    coconuts2D::Application app( static_cast<std::string>(argv[0]) );
+    coconuts2D::Application app( static_cast<std::string>(argv[0]));
+
+    // Create the Game Editor specific scene
+    auto editor = std::shared_ptr<coconuts2D::Scene>(
+        new coconuts2D::EditorScene(0, "Game Editor Scene"))
+    ;
+    auto& sm = coconuts2D::SceneManager::GetInstance();
+    sm.AddCustomScene(editor);
+
+    coconuts2D::ResourceManager rm;
+    rm.LoadVirtualFS();
+
     app.Play();
     return 0;
 }
