@@ -23,10 +23,12 @@
 #include <string>
 
 CMRC_DECLARE(resources);
+CMRC_DECLARE(scripting);
 
 namespace coconuts2D {
 
 ResourceManager::ResourceManager()
+: m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX)
 {
 }
 
@@ -37,20 +39,23 @@ ResourceManager::~ResourceManager()
 
 void ResourceManager::LoadVirtualFS()
 {
-    auto fs = cmrc::resources::get_filesystem();
+    auto fs_resources = cmrc::resources::get_filesystem();
+    auto fs_scripting = cmrc::scripting::get_filesystem();
 
     try
     {
-        auto gameDesc = fs.open("res/desc.txt");
+        LOG_INFO("Loading Scripting API...");
+
+        auto gameDesc = fs_resources.open("res/desc.txt");
         auto desc = std::string( gameDesc.begin(), gameDesc.end() );
         LOG_INFO("desc.txt: {}", desc);
 
         // Example of a script
-        auto example1Script = fs.open("res/scripts/example1.lua");
+        auto example1Script = fs_resources.open("res/scripts/example1.lua");
         auto script = std::string( example1Script.begin(), example1Script.end() );
 
         LOG_INFO("Creating scene things...");
-        
+
         // Create dummy / example game scene
         // (this would be read from a descriptor file)
         auto& sm = SceneManager::GetInstance();

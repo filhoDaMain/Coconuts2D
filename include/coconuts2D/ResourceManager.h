@@ -17,7 +17,11 @@
 #ifndef COCONUTS2D_RESOURCEMANAGER_H
 #define COCONUTS2D_RESOURCEMANAGER_H
 
+#include <string>
+
 namespace coconuts2D {
+
+#define SCRIPTING_API_PREFIX "scripting"
 
 class ResourceManager
 {
@@ -27,6 +31,7 @@ public:
     void LoadVirtualFS();
 
 private:
+    std::string m_SCRIPTING_API_PREFIX;
 };
 
 }
