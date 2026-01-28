@@ -18,6 +18,7 @@
 #define COCONUTS2D_RESOURCEMANAGER_H
 
 #include <string>
+#include <vector>
 
 namespace coconuts2D {
 
@@ -25,13 +26,29 @@ namespace coconuts2D {
 
 class ResourceManager
 {
+    struct ScriptingAPI
+    {
+        // First PoC just to prove it works
+        //TODO we don't want to allocate memory but just point to original data structure!
+        std::vector<unsigned char> bytes;
+        std::string relPath;
+    };
+
 public:
     ResourceManager();
     ~ResourceManager();
+
+    bool LoadScene(uint16_t id);
+
+
     void LoadVirtualFS();
 
+    const std::vector<ScriptingAPI>& GetScriptingAPI() { return m_Scripts; }
+
 private:
+    std::vector<ScriptingAPI> m_Scripts;
     std::string m_SCRIPTING_API_PREFIX;
+    bool m_IsVFSLoaded;
 };
 
 }

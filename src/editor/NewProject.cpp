@@ -59,6 +59,7 @@ NewProject::NewProject()
                 {
                     auto data = fs.open(newPath);
 
+                    //TODO: avoid allocating new vectors and just point to data.beign()!
                     Entry newEntry = {
                         .bytes = std::vector<unsigned char>(data.begin(), data.end()),
                         .relPath = newRelPath,
@@ -106,7 +107,7 @@ bool NewProject::CreateNewProject(const std::string& destination)
         {
             return false;
         }
-        
+
         file.write(
             reinterpret_cast<const char*>(
                 entry.bytes.data()
