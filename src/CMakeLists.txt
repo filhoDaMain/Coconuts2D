@@ -20,7 +20,7 @@ target_include_directories(core PRIVATE
 # ---------------------------------------------------------------------------
 include(${PROJECT_SOURCE_DIR}/thirdparty/cmrc/CMakeRC.cmake)
 FILE(GLOB_RECURSE Scripting
-    Scripting/*
+    scripting/*
 )
 cmrc_add_resource_library(scripting ${Scripting})
 
