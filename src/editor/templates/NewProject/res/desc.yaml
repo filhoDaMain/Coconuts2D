@@ -1,0 +1,25 @@
+---
+NrOfScenes: 2
+LoadScene: 1
+Scenes:
+  - ID: 1
+    Name: Main Menu
+    Entities:
+      - TagComponent:
+          - tag: New Game Button
+        TransformComponent:
+          - x: 10
+          - y: 10
+          - rot: 2
+        ScriptComponent:
+          - file: res/scripts/start_button.lua
+      - TagComponent:
+          - tag: Close Button
+        TransformComponent:
+          - x: 20
+          - y: 20
+          - rot: 3.14
+        ScriptComponent:
+          - file: res/scripts/close_button.lua
+  - ID: 2
+    Name: First Level
