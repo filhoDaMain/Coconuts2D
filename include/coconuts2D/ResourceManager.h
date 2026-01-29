@@ -19,6 +19,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace coconuts2D {
 
@@ -35,7 +36,13 @@ class ResourceManager
     };
 
 public:
+    //TODO to be deleted
     ResourceManager();
+
+    // Note: descPath must be later substituted by the runtime contents of the game descriptor file.
+    // This current approach only serves for easy prototyping which depends on reading the file from
+    // the filsesystem
+    ResourceManager(const std::string descPath, bool loadDefaultScene = false);
     ~ResourceManager();
 
     bool LoadScene(uint16_t id);
@@ -46,9 +53,14 @@ public:
     const std::vector<ScriptingAPI>& GetScriptingAPI() { return m_Scripts; }
 
 private:
-    std::vector<ScriptingAPI> m_Scripts;
-    std::string m_SCRIPTING_API_PREFIX;
-    bool m_IsVFSLoaded;
+    std::string m_GameDescFile;
+    std::stringstream m_DescBuffer;
+    uint16_t m_NrOfScenes;
+    uint16_t m_LoadScene;
+
+    std::vector<ScriptingAPI> m_Scripts;    //TODO delete
+    std::string m_SCRIPTING_API_PREFIX;     //TODO delete
+    bool m_IsVFSLoaded;                     //TODO delete
 };
 
 }

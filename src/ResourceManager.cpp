@@ -23,6 +23,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 #include <fstream>
+#include <stdexcept>
 
 //#define DEBUG_CODE
 
@@ -31,9 +32,44 @@ CMRC_DECLARE(scripting);
 
 namespace coconuts2D {
 
+//TODO delete
 ResourceManager::ResourceManager()
-: m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
+: m_GameDescFile(), m_DescBuffer(), m_NrOfScenes(), m_LoadScene(),
+m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
 {
+}
+
+ResourceManager::ResourceManager(const std::string descPath, bool loadDefaultScene)
+: m_GameDescFile(descPath), m_DescBuffer(), m_NrOfScenes(), m_LoadScene(),
+m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
+{
+    std::ifstream istr(m_GameDescFile);
+    m_DescBuffer << istr.rdbuf();
+
+    if (m_DescBuffer.str().size() == 0)
+    {
+        throw std::invalid_argument("GameDescFile is empty");
+    }
+    
+    YAML::Node desc = YAML::Load(m_DescBuffer.str());
+
+    //TODO substitue the hardcoded strings by constants
+    const auto& nrOfScenes = desc["NrOfScenes"];
+    if ( nrOfScenes && nrOfScenes.IsScalar() )
+    {
+        m_NrOfScenes = nrOfScenes.as<uint16_t>();
+    }
+
+    const auto& loadScene = desc["LoadScene"];
+    if ( loadScene && loadScene.IsScalar() )
+    {
+        m_LoadScene = loadScene.as<uint16_t>();
+    }
+
+    if (loadDefaultScene)
+    {
+        LoadScene(m_LoadScene);
+    }
 }
 
 ResourceManager::~ResourceManager()
@@ -47,28 +83,8 @@ ResourceManager::~ResourceManager()
  * If Scene is found, creates the scene.
  */
 bool ResourceManager::LoadScene(uint16_t id)
-{
-    if (id == 0)
-    {
-        LOG_CRITICAL("Scene id {} is reserved for Game Editor application!", id);
-        return false;
-    }
-
-    //Debug: use a template file to test parsing the game resource description file
-    std::string coconuts2DSources(COCONUTS2D_SOURCES_ROOTDIR);
-    std::string gameDesc = coconuts2DSources + "/" + "src/editor/templates/NewProject/res/desc.yaml";
-    std::ifstream istr(gameDesc);
-    // ---------------------------------------------------------------------------------------------
-
-    std::stringstream buffer;
-    buffer << istr.rdbuf();
-
-    if (buffer.str().size() == 0)
-    {
-        return false;
-    }
-    
-    YAML::Node desc = YAML::Load(buffer.str());
+{    
+    YAML::Node desc = YAML::Load(m_DescBuffer.str());
 
     //TODO substitue the hardcoded strings by constants
     const auto& scenesList = desc["Scenes"];
@@ -139,7 +155,6 @@ bool ResourceManager::LoadScene(uint16_t id)
             }
         }
     }
-
 
     return true;
 }
