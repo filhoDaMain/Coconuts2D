@@ -40,7 +40,9 @@ void EditorScene::Run(void)
     //auto& sm = SceneManager::GetInstance();
     //auto sceneID = sm.NewScene("Game Scene");
 
-    ResourceManager rm;
+    std::string coconuts2DSources(COCONUTS2D_SOURCES_ROOTDIR);
+    std::string gameDesc = coconuts2DSources + "/" + "src/editor/templates/NewProject/res/desc.yaml";
+    ResourceManager rm(gameDesc);
     rm.LoadScene(1);    // Load a Scene from a resource description file
 
 #endif
