@@ -83,7 +83,19 @@ ResourceManager::~ResourceManager()
  * If Scene is found, creates the scene.
  */
 bool ResourceManager::LoadScene(uint16_t id)
-{    
+{ 
+    if (id == 0)
+    {
+        LOG_CRITICAL("Scene id {} is reserved for Game Editor application!", id);
+        return false;
+    }
+
+    if (id > m_NrOfScenes)
+    {
+        LOG_CRITICAL("Scene id {} exceeds the total number of Scenes in application!", id);
+        return false;
+    }
+
     YAML::Node desc = YAML::Load(m_DescBuffer.str());
 
     //TODO substitue the hardcoded strings by constants
