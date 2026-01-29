@@ -17,8 +17,14 @@
 #include "EditorScene.h"
 #include <coconuts2D/Logger.h>
 
+#define DEBUG_CODE
+
+#ifdef DEBUG_CODE
 // Testing
 #include "ProjectManager.h"
+#include <coconuts2D/SceneManager.h>
+#include <coconuts2D/ResourceManager.h>
+#endif
 
 namespace coconuts2D {
 
@@ -26,8 +32,18 @@ void EditorScene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
 
-    auto& pm = ProjectManager::GetInstance();
-    pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+    // This is just for fast prototyping
+#ifdef DEBUG_CODE
+    //auto& pm = ProjectManager::GetInstance();
+    //pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+
+    //auto& sm = SceneManager::GetInstance();
+    //auto sceneID = sm.NewScene("Game Scene");
+
+    ResourceManager rm;
+    rm.LoadScene(1);    // Load a Scene from a resource description file
+
+#endif
 
 
 	LOG_TRACE("Scene exited");
