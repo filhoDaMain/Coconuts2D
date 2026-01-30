@@ -54,13 +54,13 @@ m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
     YAML::Node desc = YAML::Load(m_DescBuffer.str());
 
     //TODO substitue the hardcoded strings by constants
-    const auto& nrOfScenes = desc["NrOfScenes"];
+    const auto& nrOfScenes = desc[PARSER_ROOT_NR_OF_SCENES_SCALAR];
     if ( nrOfScenes && nrOfScenes.IsScalar() )
     {
         m_NrOfScenes = nrOfScenes.as<uint16_t>();
     }
 
-    const auto& loadScene = desc["LoadScene"];
+    const auto& loadScene = desc[PARSER_ROOT_LOAD_SCENE_SCALAR];
     if ( loadScene && loadScene.IsScalar() )
     {
         m_LoadScene = loadScene.as<uint16_t>();
@@ -99,14 +99,14 @@ bool ResourceManager::LoadScene(uint16_t id)
     YAML::Node desc = YAML::Load(m_DescBuffer.str());
 
     //TODO substitue the hardcoded strings by constants
-    const auto& scenesList = desc["Scenes"];
+    const auto& scenesList = desc[PARSER_ROOT_SCENES_SEQUENCE];
 
     if ( scenesList && scenesList.IsSequence() )
     {
         const auto& findScene = scenesList[ (id-1) ];
         if ( findScene && scenesList.IsSequence() )
         {
-            const auto& sceneName = findScene["Name"];
+            const auto& sceneName = findScene[PARSER_SCENE_NAME_SCALAR];
             if (!sceneName)
             {
                 return false;
@@ -114,7 +114,7 @@ bool ResourceManager::LoadScene(uint16_t id)
             LOG_INFO("Loading Scene: {}: {}", id, sceneName.as<std::string>());
 
             // Look for Entities:
-            const auto& entitiesList = findScene["Entities"];
+            const auto& entitiesList = findScene[PARSER_SCENE_ENTITIES_SEQUENCE];
             if ( entitiesList && entitiesList.IsSequence() )
             {
                 for (const auto& entity : entitiesList)
@@ -122,7 +122,7 @@ bool ResourceManager::LoadScene(uint16_t id)
                     LOG_DEBUG("New Entity");
 
                     // TagComponent
-                    const auto& tagComponent = entity["TagComponent"];
+                    const auto& tagComponent = entity[PARSER_ENTITY_TAGCOMPONENT_SEQUENCE];
                     if ( tagComponent && tagComponent.IsSequence() )
                     {
                         LOG_TRACE("TagComponent");
@@ -135,7 +135,7 @@ bool ResourceManager::LoadScene(uint16_t id)
                     }
 
                     // TransformComponent
-                    const auto& transformComponent = entity["TransformComponent"];
+                    const auto& transformComponent = entity[PARSER_ENTITY_TRANSFORMCOMPONENT_SEQUENCE];
                     if ( transformComponent && transformComponent.IsSequence() )
                     {
                         LOG_TRACE("TransformComponent");
@@ -150,7 +150,7 @@ bool ResourceManager::LoadScene(uint16_t id)
                     }
 
                     // ScriptComponent
-                    const auto& scriptComponent = entity["ScriptComponent"];
+                    const auto& scriptComponent = entity[PARSER_ENTITY_SCRIPTCOMPONENT_SEQUENCE];
                     if ( scriptComponent && scriptComponent.IsSequence() )
                     {
                         LOG_TRACE("ScriptComponent");
