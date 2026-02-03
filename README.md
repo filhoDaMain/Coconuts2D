@@ -1,5 +1,5 @@
 # Coconuts2D
-A 2D Game Engine
+A 2D Game Engine still in development.
 
 ## Architecture
 
