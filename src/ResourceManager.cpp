@@ -25,23 +25,20 @@
 #include <fstream>
 #include <stdexcept>
 
-//#define DEBUG_CODE
 
 CMRC_DECLARE(resources);
 CMRC_DECLARE(scripting);
 
 namespace coconuts2D {
 
-//TODO delete
-ResourceManager::ResourceManager()
-: m_GameDescFile(), m_DescBuffer(), m_NrOfScenes(), m_LoadScene(),
-m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
-{
-}
-
 ResourceManager::ResourceManager(const std::string descPath, bool loadDefaultScene)
-: m_GameDescFile(descPath), m_DescBuffer(), m_NrOfScenes(), m_LoadScene(),
-m_Scripts(), m_SCRIPTING_API_PREFIX(SCRIPTING_API_PREFIX), m_IsVFSLoaded(false)
+: m_GameDescFile(descPath),
+  m_DescBuffer(),
+  m_NrOfScenes(),
+  m_LoadScene(),
+  m_ScriptingAPIPrefix(SCRIPTING_API_PREFIX),
+  m_Scripts(),
+  m_IsScripingAPILoaded(false)
 {
     std::ifstream istr(m_GameDescFile);
     m_DescBuffer << istr.rdbuf();
@@ -96,9 +93,12 @@ bool ResourceManager::LoadScene(uint16_t id)
         return false;
     }
 
-    YAML::Node desc = YAML::Load(m_DescBuffer.str());
+    if (!m_IsScripingAPILoaded)
+    {
+        LoadScriptingAPI();
+    }
 
-    //TODO substitue the hardcoded strings by constants
+    YAML::Node desc = YAML::Load(m_DescBuffer.str());
     const auto& scenesList = desc[PARSER_ROOT_SCENES_SEQUENCE];
 
     if ( scenesList && scenesList.IsSequence() )
@@ -171,85 +171,49 @@ bool ResourceManager::LoadScene(uint16_t id)
     return true;
 }
 
-void ResourceManager::LoadVirtualFS()
+bool ResourceManager::LoadScriptingAPI(void)
 {
-#ifdef DEBUG_CODE
-    if (m_IsVFSLoaded) return;
-
-    auto fs_resources = cmrc::resources::get_filesystem();
     auto fs_scripting = cmrc::scripting::get_filesystem();
 
     try
     {
-
-        std::function<void(const std::string path)> iterate = [&](const std::string path)
+        std::function< void(const std::string& path) > iterate = [&](const std::string& path)
         {
-            for (auto&& entry : fs_scripting.iterate_directory(path))
+            for (auto&& entity : fs_scripting.iterate_directory(path))
             {
-                std::string newPath = path + "/" + entry.filename();
-                std::string newRelPath = newPath.substr(m_SCRIPTING_API_PREFIX.length()+1);
+                std::string newPath = path + "/" + entity.filename();
+                std::string apiName = newPath.substr(m_ScriptingAPIPrefix.length()+1);
 
-                // Use dot notation as a directory separator, so we can include these scripts
-                // as Lua modules like ' require("coconuts2D.entity_api") '
-                std::replace(newRelPath.begin(), newRelPath.end(), '/', '.');
+                // Use dot notation to name apis like "coconuts2D.enity_api"
+                std::replace(apiName.begin(), apiName.end(), '/', '.');
 
-                if (entry.is_directory())
+                if (entity.is_directory())
                 {
                     iterate(newPath);
                 }
                 else
                 {
                     auto data = fs_scripting.open(newPath);
-
-                    //TODO: avoid allocating new vectors and just point to data.beign()!
-                    ScriptingAPI newScript = {
-                        .bytes = std::vector<unsigned char>(data.begin(), data.end()),
-                        .relPath = newRelPath,
+                    ScriptingAPI newScript {
+                        .script = std::string_view(data.begin(), data.end() - data.begin()),
+                        .apiName = apiName
                     };
-                    m_Scripts.push_back(newScript);
+                    m_Scripts.emplace_back(newScript);
                 }
             }
+
         };
 
-        LOG_INFO("Loading Scripting API...");
-        iterate(m_SCRIPTING_API_PREFIX);
-
-        // Debug
-        LOG_TRACE("Current API Scripts:");
-        for (auto& script : m_Scripts)
-        {
-            LOG_TRACE(" {}", script.relPath);
-        }
-
-        auto gameDesc = fs_resources.open("res/desc.txt");
-        auto desc = std::string( gameDesc.begin(), gameDesc.end() );
-        LOG_INFO("desc.txt: {}", desc);
-
-        // Example of a script
-        auto example1Script = fs_resources.open("res/scripts/example1.lua");
-        auto script = std::string( example1Script.begin(), example1Script.end() );
-
-        LOG_INFO("Creating scene things...");
-
-        // Create dummy / example game scene
-        // (this would be read from a descriptor file)
-        auto& sm = SceneManager::GetInstance();
-        auto sceneID = sm.NewScene("Game Scene");
-
-        auto scene = sm.GetScene(sceneID);
-        auto entity1 = scene->NewEntity();
-        entity1.AddComponent<Components::TagComponent>("Ze Carlos");
-        entity1.AddComponent<Components::TransformComponent>();
-        entity1.AddComponent<Components::ScriptComponent>(
-            scene->GetLua(),
-            script.c_str()
-        );
+        iterate( std::string(m_ScriptingAPIPrefix) );
     }
-    catch (const std::system_error e)
+    catch(const std::system_error& e)
     {
-        LOG_WARN("No res/desc.txt available");
+        LOG_CRITICAL("Scripting API not available!");
+        return false;
     }
-#endif
+    
+    m_IsScripingAPILoaded = true;
+    return true;
 }
 
 }

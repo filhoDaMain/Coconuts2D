@@ -39,9 +39,6 @@ int main(int argc, char* argv[])
     auto& sm = coconuts2D::SceneManager::GetInstance();
     sm.AddCustomScene(editor);
 
-    coconuts2D::ResourceManager rm;
-    rm.LoadVirtualFS();
-
     app.Play();
     return 0;
 }

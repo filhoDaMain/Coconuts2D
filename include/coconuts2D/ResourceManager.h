@@ -47,20 +47,17 @@ namespace coconuts2D {
 
 #define PARSER_SCRIPTCOMPONENT_FILE_KEY_STRING "file"
 
+
 class ResourceManager
 {
+
     struct ScriptingAPI
     {
-        // First PoC just to prove it works
-        //TODO we don't want to allocate memory but just point to original data structure!
-        std::vector<unsigned char> bytes;
-        std::string relPath;
+        std::string_view script;    // ref to a script in memory
+        std::string apiName;
     };
 
 public:
-    //TODO to be deleted
-    ResourceManager();
-
     // Note: descPath must be later substituted by the runtime contents of the game descriptor file.
     // This current approach only serves for easy prototyping which depends on reading the file from
     // the filsesystem
@@ -68,21 +65,16 @@ public:
     ~ResourceManager();
 
     bool LoadScene(uint16_t id);
-
-
-    void LoadVirtualFS();
-
-    const std::vector<ScriptingAPI>& GetScriptingAPI() { return m_Scripts; }
+    bool LoadScriptingAPI(void);
 
 private:
     std::string m_GameDescFile;
     std::stringstream m_DescBuffer;
     uint16_t m_NrOfScenes;
     uint16_t m_LoadScene;
-
-    std::vector<ScriptingAPI> m_Scripts;    //TODO delete
-    std::string m_SCRIPTING_API_PREFIX;     //TODO delete
-    bool m_IsVFSLoaded;                     //TODO delete
+    std::string m_ScriptingAPIPrefix;
+    std::vector<ScriptingAPI> m_Scripts;
+    bool m_IsScripingAPILoaded;
 };
 
 }
