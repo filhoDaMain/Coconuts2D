@@ -24,6 +24,8 @@
 #include <yaml-cpp/yaml.h>
 #include <fstream>
 #include <stdexcept>
+#include <sol/sol.hpp>
+#include <glm/glm.hpp>
 
 
 CMRC_DECLARE(resources);
@@ -113,6 +115,11 @@ bool ResourceManager::LoadScene(uint16_t id)
             }
             LOG_INFO("Loading Scene: {}: {}", id, sceneName.as<std::string>());
 
+            // Create New Scene
+            auto scenePtr = std::shared_ptr<Scene>(
+                new Scene(id, sceneName.as<std::string>())
+            );
+
             // Look for Entities:
             const auto& entitiesList = findScene[PARSER_SCENE_ENTITIES_SEQUENCE];
             if ( entitiesList && entitiesList.IsSequence() )
@@ -120,18 +127,27 @@ bool ResourceManager::LoadScene(uint16_t id)
                 for (const auto& entity : entitiesList)
                 {
                     LOG_DEBUG("New Entity");
+                    auto sceneEntity = scenePtr->NewEntity();
 
                     // TagComponent
                     const auto& tagComponent = entity[PARSER_ENTITY_TAGCOMPONENT_SEQUENCE];
                     if ( tagComponent && tagComponent.IsSequence() )
                     {
                         LOG_TRACE("TagComponent");
+                        std::string tag;
+
                         for (const auto& pair : tagComponent)
                         {
                             const auto& key = pair.begin()->first.as<std::string>();
-                            const auto& value = pair.begin()->second.as<std::string>();
-                            LOG_TRACE("   {}: {}", key, value);
+
+                            if (key == PARSER_TAGCOMPONENT_TAG_KEY_STRING)
+                            {
+                                tag = pair.begin()->second.as<std::string>();
+                                LOG_TRACE("   {}: {}", key, tag);
+                            }
                         }
+
+                        sceneEntity.AddComponent<Components::TagComponent>(tag);
                     }
 
                     // TransformComponent
@@ -139,14 +155,46 @@ bool ResourceManager::LoadScene(uint16_t id)
                     if ( transformComponent && transformComponent.IsSequence() )
                     {
                         LOG_TRACE("TransformComponent");
+                        glm::vec2 pos, scale;
+                        float rot;
+
                         for (const auto& pair : transformComponent)
                         {
                             const auto& key = pair.begin()->first.as<std::string>();
-                            const auto& value = pair.begin()->second.as<std::string>();
-                            LOG_TRACE("   {}: {}", key, value);
 
-                            // if (key == <expected> ) do something
+                            // pos
+                            if (key == PARSER_TRANSFORMOMPONENT_POS_KEY_FLOAT_SEQ)
+                            {
+                                const auto& posSequence = pair.begin()->second;
+                                pos = {
+                                    posSequence[0].as<float>(),
+                                    posSequence[1].as<float>(),
+                                };
+                                LOG_TRACE("   {}: [{}, {}]", key, pos.x, pos.y);
+                            }
+
+                            // scale
+                            else if (key == PARSER_TRANSFORMOMPONENT_SCALE_KEY_FLOAT_SEQ)
+                            {
+                                const auto& scaleSequence = pair.begin()->second;
+                                scale = {
+                                    scaleSequence[0].as<float>(),
+                                    scaleSequence[1].as<float>(),
+                                };
+                                LOG_TRACE("   {}: [{}, {}]", key, scale.x, scale.y);
+                            }
+
+                            // rot
+                            else if (key == PARSER_TRANSFORMOMPONENT_ROT_KEY_FLOAT)
+                            {
+                                rot = pair.begin()->second.as<float>();
+                                LOG_TRACE("   {}: {}", key, rot);
+                            }
                         }
+
+                        sceneEntity.AddComponent<Components::TransformComponent>(
+                            pos, scale, rot
+                        );
                     }
 
                     // ScriptComponent
@@ -154,14 +202,23 @@ bool ResourceManager::LoadScene(uint16_t id)
                     if ( scriptComponent && scriptComponent.IsSequence() )
                     {
                         LOG_TRACE("ScriptComponent");
+                        lua_State* L = scenePtr->GetLua();
+                        std::string script;
+                        std::string_view code;
+
                         for (const auto& pair : scriptComponent)
                         {
                             const auto& key = pair.begin()->first.as<std::string>();
-                            const auto& value = pair.begin()->second.as<std::string>();
-                            LOG_TRACE("   {}: {}", key, value);
 
-                            // if (key == <expected> ) do something
+                            if (key == PARSER_SCRIPTCOMPONENT_FILE_KEY_STRING)
+                            {
+                                script = pair.begin()->second.as<std::string>();
+                                LOG_TRACE("   {}: {}", key, script);
+                            }
                         }
+
+                        //TODO read from resources library "script" file
+                        //code = GetScriptCode(script);
                     }
                 }
             }
