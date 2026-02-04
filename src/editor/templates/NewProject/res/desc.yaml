@@ -8,18 +8,27 @@ Scenes:
       - TagComponent:
           - tag: New Game Button
         TransformComponent:
-          - x: 10
-          - y: 10
+          - pos: [0.5, 0.5]
+          - scale: [1.0, 1.0]
           - rot: 2
         ScriptComponent:
-          - file: res/scripts/start_button.lua
+          - file: res/scripts/example1.lua
       - TagComponent:
           - tag: Close Button
         TransformComponent:
-          - x: 20
-          - y: 20
+          - pos: [2.5, 1.0]
+          - scale: [1.0, 1.0]
           - rot: 3.14
         ScriptComponent:
-          - file: res/scripts/close_button.lua
+          - file: res/scripts/example1.lua
   - ID: 2
     Name: First Level
+    Entities:
+      - TagComponent:
+          - tag: Player
+        TransformComponent:
+          - pos: [7, 7]
+          - scale: [1.0, 1.0]
+          - rot: 0.7
+        ScriptComponent:
+          - file: res/scripts/example1.lua
