@@ -33,11 +33,16 @@ add_custom_target(combined
     COMMAND ar -x $<TARGET_FILE:core>
     COMMAND ar -x $<TARGET_FILE:lua>
     COMMAND ar -x $<TARGET_FILE:scripting>
+    COMMAND ar -x $<TARGET_FILE:yaml-cpp>
     COMMAND ar -rcs ${CCN2D_LIB} *.o
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     BYPRODUCTS ${CCN2D_LIB}
-    DEPENDS core lua scripting
+    DEPENDS core lua scripting yaml-cpp
 )
+
+# NOTE! I'm linking against yaml-cpp here just temporarily!!
+# Yaml files should only be used in Editor. In the runtime I should read game data
+# from a binary serialized object. For now Yaml is used both in runtime (game) and editor!
 
 # Combined library target
 add_library(ccn2d STATIC IMPORTED GLOBAL)
