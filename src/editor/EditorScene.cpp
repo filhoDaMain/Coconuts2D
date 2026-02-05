@@ -17,9 +17,10 @@
 #include "EditorScene.h"
 #include <coconuts2D/Logger.h>
 
-#define DEBUG_CODE
+#define PROTOTYPE_CREATE_NEWSCENE 0
+#define PROTOTYPE_LOAD_SCENE 1
 
-#ifdef DEBUG_CODE
+#if PROTOTYPE_CREATE_NEWSCENE || PROTOTYPE_LOAD_SCENE
 // Testing
 #include "ProjectManager.h"
 #include <coconuts2D/SceneManager.h>
@@ -33,18 +34,16 @@ void EditorScene::Run(void)
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
 
     // This is just for fast prototyping
-#ifdef DEBUG_CODE
-    //auto& pm = ProjectManager::GetInstance();
-    //pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+#if PROTOTYPE_CREATE_NEWSCENE
+    auto& pm = ProjectManager::GetInstance();
+    pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+#endif
 
-    //auto& sm = SceneManager::GetInstance();
-    //auto sceneID = sm.NewScene("Game Scene");
-
+#if PROTOTYPE_LOAD_SCENE
     std::string coconuts2DSources(COCONUTS2D_SOURCES_ROOTDIR);
     std::string gameDesc = coconuts2DSources + "/" + "src/editor/templates/NewProject/res/desc.yaml";
     ResourceManager rm(gameDesc);
     rm.LoadScene(1);    // Load a Scene from a resource description file
-
 #endif
 
 
