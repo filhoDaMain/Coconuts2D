@@ -53,16 +53,6 @@ void Scene::Run(void)
 {
     LOG_INFO("Run Scene {}: {}", m_ID, m_Name);
 
-    // Example code (to be removed)
-    // Create Entity and add components
-    Entity entity1 = this->NewEntity();
-    entity1.AddComponent<Components::TagComponent>("Camoes");
-    entity1.AddComponent<Components::TransformComponent>();
-    entity1.AddComponent<Components::ScriptComponent>(
-        m_Lua,
-        "../src/ecs/scripts/example.lua"
-    );
-
     // Call update() from each ScriptComponent
     m_Registry.view<Components::ScriptComponent>().each(
         [&] (auto entity, auto& script)
