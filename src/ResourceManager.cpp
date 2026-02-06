@@ -222,6 +222,14 @@ bool ResourceManager::LoadScene(uint16_t id)
                     }
                 }
             } // entities per this Scene
+
+            /**
+             * Scene was created and populated with Entities.
+             * Add Scene to SceneManager's "registry"
+             */
+            auto& sm = coconuts2D::SceneManager::GetInstance();
+            sm.AddCustomScene(scenePtr);
+            LOG_TRACE("Scene queued in SceneManager");
             
         } // Scene
     }
