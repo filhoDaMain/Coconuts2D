@@ -67,6 +67,9 @@ public:
     bool LoadScriptingAPI(void);
 
 private:
+    std::string_view GetScriptCode(const std::string& script);
+
+private:
     std::string m_GameDescFile;
     std::stringstream m_DescBuffer;
     uint16_t m_NrOfScenes;

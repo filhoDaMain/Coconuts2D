@@ -113,7 +113,7 @@ bool ResourceManager::LoadScene(uint16_t id)
             {
                 return false;
             }
-            LOG_INFO("Loading Scene: {}: {}", id, sceneName.as<std::string>());
+            LOG_DEBUG("Loading Scene: {}: {}", id, sceneName.as<std::string>());
 
             // Create New Scene
             auto scenePtr = std::shared_ptr<Scene>(
@@ -126,7 +126,7 @@ bool ResourceManager::LoadScene(uint16_t id)
             {
                 for (const auto& entity : entitiesList)
                 {
-                    LOG_DEBUG("New Entity");
+                    LOG_TRACE("New Entity");
                     auto sceneEntity = scenePtr->NewEntity();
 
                     // TagComponent
@@ -217,12 +217,13 @@ bool ResourceManager::LoadScene(uint16_t id)
                             }
                         }
 
-                        //TODO read from resources library "script" file
-                        //code = GetScriptCode(script);
+                        code = GetScriptCode(script);
+                        sceneEntity.AddComponent<Components::ScriptComponent>(L, code.data());
                     }
                 }
-            }
-        }
+            } // entities per this Scene
+            
+        } // Scene
     }
 
     return true;
@@ -271,6 +272,25 @@ bool ResourceManager::LoadScriptingAPI(void)
     
     m_IsScripingAPILoaded = true;
     return true;
+}
+
+std::string_view ResourceManager::GetScriptCode(const std::string& script)
+{
+    auto fs_resources = cmrc::resources::get_filesystem();
+    std::string_view code;
+
+    if ( fs_resources.is_file(script) )
+    {
+        LOG_TRACE("Reading script code from {}", script);
+        auto data = fs_resources.open(script);
+        code = std::string_view(data.begin(), data.end() - data.begin());
+    }
+    else
+    {
+        LOG_CRITICAL("Trying to load script code from non existing script: {}", script);
+    }
+
+    return code;
 }
 
 }
