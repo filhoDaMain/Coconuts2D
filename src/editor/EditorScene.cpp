@@ -17,8 +17,8 @@
 #include "EditorScene.h"
 #include <coconuts2D/Logger.h>
 
-#define PROTOTYPE_CREATE_NEWSCENE 0
-#define PROTOTYPE_LOAD_SCENE 1
+#define PROTOTYPE_CREATE_NEWSCENE 1
+#define PROTOTYPE_LOAD_SCENE 0
 
 #if PROTOTYPE_CREATE_NEWSCENE || PROTOTYPE_LOAD_SCENE
 // Testing
@@ -36,7 +36,7 @@ void EditorScene::Run(void)
     // This is just for fast prototyping
 #if PROTOTYPE_CREATE_NEWSCENE
     auto& pm = ProjectManager::GetInstance();
-    pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Coconuts2D_Projects/Example1");
+    pm.NewProject(ProjectManager::ProjectTemplate::NewProject, "/Users/temprilho/dev/Projects/Coconuts2DGame");
 #endif
 
 #if PROTOTYPE_LOAD_SCENE

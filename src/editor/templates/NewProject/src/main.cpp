@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 
     coconuts2D::Application app( static_cast<std::string>(argv[0]));
 
-    std::string gameDesc = "/Users/temprilho/dev/Coconuts2D_Projects/Example1/res/desc.yaml";
+    std::string gameDesc = "/Users/temprilho/dev/Projects/Coconuts2DGame/res/desc.yaml";
     coconuts2D::ResourceManager rm(gameDesc);
     rm.LoadScene(1);
 
