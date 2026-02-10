@@ -12,7 +12,7 @@ Scenes:
           - scale: [1.0, 1.0]
           - rot: 2
         ScriptComponent:
-          - file: res/scripts/example1.lua
+          - file: res/scripts/template.lua
       - TagComponent:
           - tag: Close Button
         TransformComponent:
@@ -20,7 +20,7 @@ Scenes:
           - scale: [1.0, 1.0]
           - rot: 3.14
         ScriptComponent:
-          - file: res/scripts/example1.lua
+          - file: res/scripts/template.lua
   - ID: 2
     Name: First Level
     Entities:
@@ -31,4 +31,4 @@ Scenes:
           - scale: [1.0, 1.0]
           - rot: 0.7
         ScriptComponent:
-          - file: res/scripts/example1.lua
+          - file: res/scripts/template.lua
