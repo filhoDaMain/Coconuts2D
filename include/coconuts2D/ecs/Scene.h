@@ -28,6 +28,12 @@ namespace coconuts2D {
 class Entity;
 class ProjectManager;
 
+struct ScriptingAPI
+{
+    std::string_view script;    // ref to a script in memory
+    std::string apiName;
+};
+
 class Scene
 {
 public:

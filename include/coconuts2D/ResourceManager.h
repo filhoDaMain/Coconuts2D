@@ -20,6 +20,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <coconuts2D/ecs/Scene.h>
 
 namespace coconuts2D {
 
@@ -49,13 +50,6 @@ namespace coconuts2D {
 
 class ResourceManager
 {
-
-    struct ScriptingAPI
-    {
-        std::string_view script;    // ref to a script in memory
-        std::string apiName;
-    };
-
 public:
     // Note: descPath must be later substituted by the runtime contents of the game descriptor file.
     // This current approach only serves for easy prototyping which depends on reading the file from
