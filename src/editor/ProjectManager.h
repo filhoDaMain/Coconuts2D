@@ -45,15 +45,9 @@ public:
     }
 
     bool NewProject(ProjectTemplate projTemplate, const std::string& location);
-    bool SaveProject(void);
-    bool LoadProject(const std::string& projectFile);
 
 private:
     ProjectManager() : m_ProjRootDir() {};
-    void SerializeEntity(YAML::Emitter& out, const Entity& entity);
-    void SerializeScene(YAML::Emitter& out, uint16_t id);
-    void DeserializeEntity(YAML::Node& node, uint16_t sceneID);
-    void DeserializeScene(YAML::Node& node);
 
 private:
     std::string m_ProjRootDir;
