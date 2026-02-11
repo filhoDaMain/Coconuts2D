@@ -47,6 +47,8 @@ public:
 
     const sol::state& GetLua() { return m_Lua; }
 
+    void LoadScriptingAPI(std::vector<ScriptingAPI>& apiScripts);
+
 protected:
     uint16_t m_ID;
     std::string m_Name;

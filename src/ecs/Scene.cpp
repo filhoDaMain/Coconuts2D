@@ -72,4 +72,12 @@ Entity Scene::NewEntity(void)
     };
 }
 
+void Scene::LoadScriptingAPI(std::vector<ScriptingAPI>& apiScripts)
+{
+    for (const auto& api : apiScripts)
+    {
+        m_Lua.require_script(api.apiName, api.script);
+    }
+}
+
 }
