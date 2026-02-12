@@ -120,6 +120,9 @@ bool ResourceManager::LoadScene(uint16_t id)
                 new Scene(id, sceneName.as<std::string>())
             );
 
+            // Load APIS
+            scenePtr->LoadScriptingAPI(m_Scripts);
+
             // Look for Entities:
             const auto& entitiesList = findScene[PARSER_SCENE_ENTITIES_SEQUENCE];
             if ( entitiesList && entitiesList.IsSequence() )
