@@ -41,7 +41,7 @@ void EditorScene::Run(void)
 
 #if PROTOTYPE_LOAD_SCENE
     std::string coconuts2DSources(COCONUTS2D_SOURCES_ROOTDIR);
-    std::string gameDesc = coconuts2DSources + "/" + "src/editor/templates/NewProject/res/desc.yaml";
+    std::string gameDesc = coconuts2DSources + "/" + "/Users/temprilho/dev/Projects/Coconuts2DGame/res/desc.yaml";
     ResourceManager rm(gameDesc);
     rm.LoadScene(1);    // Load a Scene from a resource description file
 #endif
