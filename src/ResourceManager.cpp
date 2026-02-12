@@ -253,8 +253,14 @@ bool ResourceManager::LoadScriptingAPI(void)
                 std::string newPath = path + "/" + entity.filename();
                 std::string apiName = newPath.substr(m_ScriptingAPIPrefix.length()+1);
 
-                // Use dot notation to name apis like "coconuts2D.enity_api"
+                /**
+                 * Use dot notation and remove .lua suffix, so that a file named
+                 * "${m_ScriptingAPIPrefix}/coconuts2D/entity_api.lua" is
+                 * identified by the API name "coconuts2D.entity_api"
+                 */
                 std::replace(apiName.begin(), apiName.end(), '/', '.');
+                std::string suffix = ".lua";
+                apiName = apiName.substr(0, apiName.length() - suffix.length());
 
                 if (entity.is_directory())
                 {
