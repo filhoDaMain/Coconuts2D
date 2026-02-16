@@ -10,13 +10,9 @@
  
 int main(int argc, char* argv[])
 {
-    // Set LUA_PATH to include Coconuts2D Lua API scripts
-    std::string lua_api_dir("/Users/temprilho/dev/Coconuts2D/src/scripting/");
-    std::string env_lua_path = "$LUA_PATH;" + lua_api_dir + "/?.lua";
-    (void) setenv("LUA_PATH", env_lua_path.c_str(), 1);
-
     coconuts2D::Application app( static_cast<std::string>(argv[0]));
 
+    //TODO read gameDesc from runtime
     std::string gameDesc = "/Users/temprilho/dev/Projects/Coconuts2DGame/res/desc.yaml";
     coconuts2D::ResourceManager rm(gameDesc);
     rm.LoadScene(1);
